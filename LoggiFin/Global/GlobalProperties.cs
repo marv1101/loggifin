@@ -4,6 +4,7 @@
     {
 
         public static bool debug = true;
+        public static int id = 1;
 
     }
 }

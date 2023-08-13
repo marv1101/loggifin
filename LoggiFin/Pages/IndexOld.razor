@@ -1,0 +1,162 @@
+﻿@page "/backup"
+@using LoggiFin.Data;
+@using System.Globalization;
+@using LoggiFin.Global;
+
+@inject NavigationManager uriHelper;
+
+<PageTitle>Data Input</PageTitle>
+
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="5000" Placement="ToastsPlacement.TopRight" />
+
+<h1>Daten Eingeben</h1>
+
+<div>
+    <p>Bitte die Daten eingeben.</p>
+</div>
+
+<div>
+    <div class="mb-3">
+        <label>Datum</label>
+        <DateInput TValue="DateOnly" @bind-Value="@date1" Placeholder="Enter Date" />
+        <label>Einnahmen</label>
+        <CurrencyInput TValue="double" @bind-Value="@einnahmen" Placeholder="Einnahmen" />
+        <label>Ausgaben</label>
+        <CurrencyInput TValue="double" @bind-Value="@ausgaben" Placeholder="Ausgaben" />
+        <label>Kontostand</label>
+        <CurrencyInput TValue="double" @bind-Value="@kontostand" Placeholder="Kontostand" />
+        <label>Sparkonto</label>
+        <CurrencyInput TValue="double" @bind-Value="@sparkonto" Placeholder="Sparkonto" />
+        <label>Scalable Sparplan</label>
+        <CurrencyInput TValue="double" @bind-Value="@scalableSparplan" Placeholder="Scalable Sparplan" />
+        <label>Volksbank Sparplan</label>
+        <CurrencyInput TValue="double" @bind-Value="@volksbankSparplan" Placeholder="Volksbank Sparplan" />
+        <label>Beschreibung Transfer</label>
+        <InputText @bind-Value="@descr">Beschreibung</InputText>
+        <br /><label>Transfermenge</label>
+        <CurrencyInput TValue="double" @bind-Value="@transfer" Placeholder="Transfer" />
+        <label>Bargeld</label>
+        <CurrencyInput TValue="double" @bind-Value="@bargeld" Placeholder="Bargeld" />
+        <label>Urlaubsgeld</label>
+        <CurrencyInput TValue="double" @bind-Value="@urlaubskasse" Placeholder="Urlaubskasse" />
+        <br />
+        <Button Color="ButtonColor.Success" Outline="true" @onclick="() => sendData()"> Daten senden </Button>
+    </div>
+    <div class="mb-3">Entered date: @date1</div>
+
+    @code {
+        List<ToastMessage> messages = new List<ToastMessage>();
+        private DateOnly date1 = DateOnly.FromDateTime(DateTime.Now);
+        private double einnahmen = 0;
+        private double ausgaben = 0;
+        private double kontostand = 0;
+        private double sparkonto = 0;
+        private double scalableSparplan = 0;
+        private double volksbankSparplan = 0;
+        private double transfer = 0;
+        private double bargeld = 0;
+        private double urlaubskasse = 0;
+        string descr = "";
+        DatabaseManager mngr = new DatabaseManager(GlobalProperties.debug); //schickt die Daten noch an die TestDB
+
+        private void sendData()
+        {
+            if(descr.Replace(" ", "") != "")
+            {
+                mngr.insertDataIntoDb(date1, einnahmen, ausgaben, kontostand, sparkonto,
+                scalableSparplan, volksbankSparplan, descr, transfer, bargeld, urlaubskasse);
+
+                uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+
+                confirmSend();
+            }
+            else
+            {
+                denySend();
+            }
+
+        }
+
+        private void confirmSend()
+        {
+            messages.Add(new ToastMessage(ToastType.Success, "Daten gesendet", $"{DateTime.Now}",
+            $"Daten wurden erfolgreich übermittelt!"));
+        }
+
+        private void denySend()
+        {
+            messages.Add(new ToastMessage(ToastType.Danger, "Daten wurden nicht gesendet gesendet", $"{DateTime.Now}",
+            $"Daten wurden nicht erfolgreich übermittelt! Bitte alles ausfüllen"));
+        }
+    }
+</div>
+
+<div>
+    <Grid @ref="grid"
+      TItem="FinLoggingDataRow"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="LoggingRowDataProvider"
+      AllowFiltering="true"
+      AllowSorting="true"
+      Responsive="true">
+
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Id" PropertyName="rowId">
+        @context.rowId
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Datum" PropertyName="date" SortString="Date" SortKeySelector="item => item.date" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
+        @context.date
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Einnahmen" PropertyName="einnahmen" SortString="Einnahmen" SortKeySelector="item => item.einnahmen">
+        @context.einnahmen.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Ausgaben" PropertyName="ausgaben" SortString="Ausgaben" SortKeySelector="item => item.ausgaben">
+        @context.ausgaben.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Kontostand" PropertyName="kontostand" SortString="Kontostand" SortKeySelector="item => item.kontostand">
+        @context.kontostand.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Sparkontostand" PropertyName="sparkontostand" SortString="Sparkontostand" SortKeySelector="item => item.sparkontostand">
+        @context.sparkontostand.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Scalable Sparplan" PropertyName="scalableSparplan" SortString="Scalable Sparplan" SortKeySelector="item => item.scalableSparplan">
+        @context.scalableSparplan.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Volksbank Sparplan" PropertyName="volksbankSparplan" SortString="Volksbank Sparplan" SortKeySelector="item => item.volksbankSparplan">
+        @context.volksbankSparplan.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Transfer" PropertyName="amountTotal" SortString="Transfer" SortKeySelector="item => item.amoutTotal">
+        @context.amoutTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Bargeld" PropertyName="bargeld" SortString="Bargeld" SortKeySelector="item => item.bargeld">
+        @context.bargeld.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Urlaubskasse" PropertyName="urlaubskasse" SortString="Urlaubskasse" SortKeySelector="item => item.urlaubskasse">
+        @context.urlaubskasse.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Gesamtvermögen" PropertyName="gesamt" SortString="Gesamt" SortKeySelector="item => item.totalBalance">
+        @context.totalBalance.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+
+</Grid>
+
+@code {
+    BlazorBootstrap.Grid<FinLoggingDataRow> grid = default!;
+    private IEnumerable<FinLoggingDataRow> dataRows = default!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+        private async Task<GridDataProviderResult<FinLoggingDataRow>> LoggingRowDataProvider(GridDataProviderRequest<FinLoggingDataRow> request)
+    {
+            if (dataRows is null){
+                FinLoggingDataService finLoggingDataService = new FinLoggingDataService();
+                dataRows = finLoggingDataService.GetDataRows();
+            }
+
+            return await Task.FromResult(request.ApplyTo(dataRows));
+    }
+
+}
+</div>

@@ -1,0 +1,161 @@
+﻿@page "/visualization"
+
+@using BlazorBootstrap.Extensions
+@using Color = System.Drawing.Color
+@using LoggiFin.Data
+@using LoggiFin.Global;
+
+@inject BrowserService Service
+
+
+<PageTitle>Diagrams</PageTitle>
+
+<Tabs>
+    <Tab Title="Diagram Einnahmen vs. Ausgaben" IsActive="true">
+        <Content>
+
+            <BarChart @ref="inOutChart" Width="@width" Class="mb-4" />
+
+        </Content>
+    </Tab>
+    <Tab Title="Diagram Vermögensentwicklung">
+        <Content>
+            <LineChart @ref="capitalChange" Width="@width" Class="mb-4" />
+        </Content>
+    </Tab>
+    <Tab Title="Diagram 3">
+        <Content>
+            <p class="mt-3">This is the placeholder content for the <b>Diagram 3</b> tab.</p>
+        </Content>
+    </Tab>
+    <Tab Title="Diagram 4">
+        <Content>
+            <p class="mt-3">This is the placeholder content for the <b>Diagram 4</b> tab.</p>
+        </Content>
+    </Tab>
+</Tabs>
+
+@code {
+    private BarChart inOutChart;
+    private LineChart capitalChange;
+
+    private ChartData chartData;
+    private BarChartOptions chartOptions;
+
+    private LineChartOptions lineChartOptions;
+
+    private ChartData chartDataCapital;
+
+    private int height { get; set; }
+    private int width { get; set; }
+
+    FinLoggingDataService finLoggingDataService = new FinLoggingDataService();
+
+
+    protected override void OnInitialized()
+    {
+
+        IEnumerable<FinLoggingDataRow> data = finLoggingDataService.GetDataRows();
+
+        List<string> labels = new List<string>();
+        List<double> einnahmen = new List<double>();
+        List<double> ausgaben = new List<double>();
+        List<double> kontostand = new List<double>();
+        List<double> sparkontostand = new List<double>();
+        List<double> scalable = new List<double>();
+        List<double> volksbank = new List<double>();
+        List<double> bargeld = new List<double>();
+        List<double> urlaubskasse = new List<double>();
+        List<double> total = new List<double>();
+
+        foreach(FinLoggingDataRow row in data)
+        {
+            labels.Add(row.date.ToString());
+            einnahmen.Add(row.einnahmen);
+            ausgaben.Add(row.ausgaben);
+            kontostand.Add(row.kontostand);
+            sparkontostand.Add(row.sparkontostand);
+            scalable.Add(row.scalableSparplan);
+            volksbank.Add(row.volksbankSparplan);
+            bargeld.Add(row.bargeld);
+            urlaubskasse.Add(row.urlaubskasse);
+            total.Add(row.totalBalance);
+        }
+
+        chartData = new ChartData
+            {
+                Labels = labels,
+                Datasets = new List<IChartDataset>()
+            };
+
+        chartData.Datasets.Add(createDataSetFromDoubleList("Einnahmen", einnahmen, Color.LightGreen));
+        chartData.Datasets.Add(createDataSetFromDoubleList("Ausgaben", ausgaben, Color.IndianRed));
+
+        chartDataCapital = new ChartData
+            {
+                Labels = labels,
+                Datasets = new List<IChartDataset>()
+            };
+
+        chartDataCapital.Datasets.Add(createLineDataSetFromDoubleList("Gesamtvermögen", total, Color.LightSkyBlue));
+
+        chartOptions = new BarChartOptions
+            {
+                Responsive = true,
+                Interaction = new Interaction { Mode = InteractionMode.Index }
+            };
+
+        lineChartOptions = new LineChartOptions
+            {
+                Responsive = true,
+                Interaction = new Interaction { Mode = InteractionMode.Index }
+            };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await inOutChart.InitializeAsync(chartData, chartOptions);
+            await capitalChange.UpdateAsync(chartDataCapital, lineChartOptions);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private BarChartDataset createDataSetFromDoubleList(string label, List<double> data, Color color)
+    {
+        return new BarChartDataset()
+            {
+                Label = label,
+                Data = data,
+                BackgroundColor = new List<string> { color.ToRgbString() },
+                BorderColor = new List<string> { Color.White.ToRgbString() },
+                BorderWidth = new List<double> { 1 },
+            };
+    }
+
+    private LineChartDataset createLineDataSetFromDoubleList(string label, List<double> data, Color color)
+    {
+        return new LineChartDataset()
+            {
+                Label = label,
+                Data = data,
+                BackgroundColor = new List<string> { color.ToRgbString() },
+                BorderColor = new List<string> { Color.LightGreen.ToRgbString() },
+                BorderWidth = new List<double> { 2 },
+                HoverBorderWidth = new List<double> { 4 },
+                PointBackgroundColor = new List<string> { color.ToRgbString() },
+                PointRadius = new List<int> { 3 },
+                PointHoverRadius = new List<int> { 4 },
+            };
+    }
+
+    async Task GetDimensions()
+    {
+        var dimension = await Service.GetDimensions();
+        height = dimension.Height;
+        width = dimension.Width;
+    }
+    //Hier Diagrammme rein mit Tabs
+
+}

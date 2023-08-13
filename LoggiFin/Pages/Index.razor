@@ -1,0 +1,16 @@
+﻿@page "/"
+
+@inject NavigationManager uriHelper;
+
+<h3>Welcome to LoggiFin!</h3>
+
+<Button Color="ButtonColor.Success" Size="Size.Large" @onclick="() => start()">Start</Button>
+
+@code {
+
+    private void start()
+    {
+        uriHelper.NavigateTo(uriHelper.BaseUri + "/FetchData", forceLoad: true);
+    }
+
+}

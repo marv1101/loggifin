@@ -1,8 +1,8 @@
 {
   "ContentRoots": [
-    "/src/LoggiFin/wwwroot/",
-    "/root/.nuget/fallbackpackages2/blazor.bootstrap/1.9.5/staticwebassets/",
-    "/src/LoggiFin/obj/Debug/net7.0/scopedcss/bundle/"
+    "/src/LoggiFin/wwwroot",
+    "/root/.nuget/fallbackpackages/blazor.bootstrap/1.9.5/staticwebassets",
+    "/src/LoggiFin/obj/Debug/net7.0/scopedcss/bundle"
   ],
   "Root": {
     "Children": {

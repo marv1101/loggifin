@@ -7491,23 +7491,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Marian\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\maria\\.nuget\\packages\\": {},
+    "D:\\Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFinTests\\LoggiFinTests.csproj",
+      "projectUniqueName": "D:\\Programmieren\\C#\\Projects\\LoggiFinTests\\LoggiFinTests.csproj",
       "projectName": "LoggiFinTests",
-      "projectPath": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFinTests\\LoggiFinTests.csproj",
-      "packagesPath": "C:\\Users\\Marian\\.nuget\\packages\\",
-      "outputPath": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFinTests\\obj\\",
+      "projectPath": "D:\\Programmieren\\C#\\Projects\\LoggiFinTests\\LoggiFinTests.csproj",
+      "packagesPath": "C:\\Users\\maria\\.nuget\\packages\\",
+      "outputPath": "D:\\Programmieren\\C#\\Projects\\LoggiFinTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "D:\\Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Marian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\maria\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -7523,8 +7523,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\LoggiFin.csproj": {
-              "projectPath": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\LoggiFin.csproj"
+            "D:\\Programmieren\\C#\\Projects\\LoggiFin\\LoggiFin.csproj": {
+              "projectPath": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\LoggiFin.csproj"
             }
           }
         }
@@ -7572,7 +7572,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

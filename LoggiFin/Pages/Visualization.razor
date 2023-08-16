@@ -23,9 +23,9 @@
             <LineChart @ref="capitalChange" Width="@width" Class="mb-4" />
         </Content>
     </Tab>
-    <Tab Title="Diagram 3">
+    <Tab Title="Diagram Vermögensverteilung">
         <Content>
-            <p class="mt-3">This is the placeholder content for the <b>Diagram 3</b> tab.</p>
+            <DoughnutChart @ref="capitalDistrobution" Width="@halfWidth" Class="mb-4" />
         </Content>
     </Tab>
     <Tab Title="Diagram 4">
@@ -38,16 +38,20 @@
 @code {
     private BarChart inOutChart;
     private LineChart capitalChange;
+    private DoughnutChart capitalDistrobution;
 
-    private ChartData chartData;
+
     private BarChartOptions chartOptions;
-
+    private DoughnutChartOptions capitalDistrobutionOptions;
     private LineChartOptions lineChartOptions;
 
+    private ChartData chartData;
     private ChartData chartDataCapital;
+    private ChartData capitalDistrData;
 
     private int height { get; set; }
     private int width { get; set; }
+    private int halfWidth { get; set; }
 
     FinLoggingDataService finLoggingDataService = new FinLoggingDataService();
 
@@ -99,6 +103,17 @@
 
         chartDataCapital.Datasets.Add(createLineDataSetFromDoubleList("Gesamtvermögen", total, Color.LightSkyBlue));
 
+        capitalDistrData = new ChartData
+        {
+            Labels = new List<string> {"Kontostand", "Sparkontostand", "Scalable", "Volksbank", "Bargeld", "Urlaubsgeld"},
+            Datasets = new List<IChartDataset>()
+        };
+
+        List<double> dist = new List<double> { kontostand.Last(), sparkontostand.Last(), scalable.Last(), volksbank.Last(), bargeld.Last(), urlaubskasse.Last() };
+        Color[] colors = { Color.Coral, Color.Aqua, Color.DarkOliveGreen, Color.DarkSalmon, Color.Firebrick, Color.RebeccaPurple };
+
+        capitalDistrData.Datasets.Add(createDoughnutDataSetFromDoubleList(dist, colors));
+
         chartOptions = new BarChartOptions
             {
                 Responsive = true,
@@ -110,6 +125,12 @@
                 Responsive = true,
                 Interaction = new Interaction { Mode = InteractionMode.Index }
             };
+
+        capitalDistrobutionOptions = new DoughnutChartOptions
+            {
+                Responsive = true
+            };
+
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -118,6 +139,7 @@
         {
             await inOutChart.InitializeAsync(chartData, chartOptions);
             await capitalChange.UpdateAsync(chartDataCapital, lineChartOptions);
+            await capitalDistrobution.InitializeAsync(capitalDistrData, capitalDistrobutionOptions);
         }
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -131,6 +153,16 @@
                 BackgroundColor = new List<string> { color.ToRgbString() },
                 BorderColor = new List<string> { Color.White.ToRgbString() },
                 BorderWidth = new List<double> { 1 },
+            };
+    }
+
+    private DoughnutChartDataset createDoughnutDataSetFromDoubleList(List<double> data, Color[] colors)
+    {
+        return new DoughnutChartDataset()
+            {
+                Data = data,
+                BackgroundColor = new List<string> { colors[0].ToRgbString(), colors[1].ToRgbString(), colors[2].ToRgbString(),
+                colors[3].ToRgbString(), colors[4].ToRgbString(), colors[5].ToRgbString() },
             };
     }
 
@@ -155,6 +187,7 @@
         var dimension = await Service.GetDimensions();
         height = dimension.Height;
         width = dimension.Width;
+        halfWidth = width / 2;
     }
     //Hier Diagrammme rein mit Tabs
 

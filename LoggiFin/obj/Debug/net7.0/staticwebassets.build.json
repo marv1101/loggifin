@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "2wb1AL4gPk24PLOUuxscyIXUOdeZVEd5SIM54rmOSu4=",
+  "Hash": "+M8ws2wjhFLFTdGxzxnpK4Z/DHtT9zqRbFMI386Kyp0=",
   "Source": "LoggiFin",
   "BasePath": "_content/LoggiFin",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "LoggiFin\\wwwroot",
       "Source": "LoggiFin",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\Marian\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\Blazor.Bootstrap.bundle.scp.css",
+      "Identity": "C:\\Users\\maria\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\Blazor.Bootstrap.bundle.scp.css",
       "SourceId": "Blazor.Bootstrap",
       "SourceType": "Package",
-      "ContentRoot": "C:\\Users\\Marian\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\",
+      "ContentRoot": "C:\\Users\\maria\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\",
       "BasePath": "_content/Blazor.Bootstrap",
       "RelativePath": "Blazor.Bootstrap.bundle.scp.css",
       "AssetKind": "All",
@@ -31,13 +31,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\Marian\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\Blazor.Bootstrap.bundle.scp.css"
+      "OriginalItemSpec": "C:\\Users\\maria\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\Blazor.Bootstrap.bundle.scp.css"
     },
     {
-      "Identity": "C:\\Users\\Marian\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\blazor.bootstrap.css",
+      "Identity": "C:\\Users\\maria\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\blazor.bootstrap.css",
       "SourceId": "Blazor.Bootstrap",
       "SourceType": "Package",
-      "ContentRoot": "C:\\Users\\Marian\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\",
+      "ContentRoot": "C:\\Users\\maria\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\",
       "BasePath": "_content/Blazor.Bootstrap",
       "RelativePath": "blazor.bootstrap.css",
       "AssetKind": "All",
@@ -48,13 +48,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\Marian\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\blazor.bootstrap.css"
+      "OriginalItemSpec": "C:\\Users\\maria\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\blazor.bootstrap.css"
     },
     {
-      "Identity": "C:\\Users\\Marian\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\blazor.bootstrap.js",
+      "Identity": "C:\\Users\\maria\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\blazor.bootstrap.js",
       "SourceId": "Blazor.Bootstrap",
       "SourceType": "Package",
-      "ContentRoot": "C:\\Users\\Marian\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\",
+      "ContentRoot": "C:\\Users\\maria\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\",
       "BasePath": "_content/Blazor.Bootstrap",
       "RelativePath": "blazor.bootstrap.js",
       "AssetKind": "All",
@@ -65,13 +65,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\Marian\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\blazor.bootstrap.js"
+      "OriginalItemSpec": "C:\\Users\\maria\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\blazor.bootstrap.js"
     },
     {
-      "Identity": "C:\\Users\\Marian\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\icon\\128X128.png",
+      "Identity": "C:\\Users\\maria\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\icon\\128X128.png",
       "SourceId": "Blazor.Bootstrap",
       "SourceType": "Package",
-      "ContentRoot": "C:\\Users\\Marian\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\",
+      "ContentRoot": "C:\\Users\\maria\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\",
       "BasePath": "_content/Blazor.Bootstrap",
       "RelativePath": "icon/128X128.png",
       "AssetKind": "All",
@@ -82,13 +82,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\Marian\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\icon\\128X128.png"
+      "OriginalItemSpec": "C:\\Users\\maria\\.nuget\\packages\\blazor.bootstrap\\1.9.5\\staticwebassets\\icon\\128X128.png"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\obj\\Debug\\net7.0\\scopedcss\\bundle\\LoggiFin.styles.css",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\obj\\Debug\\net7.0\\scopedcss\\bundle\\LoggiFin.styles.css",
       "SourceId": "LoggiFin",
       "SourceType": "Computed",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\obj\\Debug\\net7.0\\scopedcss\\bundle\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\obj\\Debug\\net7.0\\scopedcss\\bundle\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "LoggiFin.styles.css",
       "AssetKind": "All",
@@ -99,13 +99,13 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\obj\\Debug\\net7.0\\scopedcss\\bundle\\LoggiFin.styles.css"
+      "OriginalItemSpec": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\obj\\Debug\\net7.0\\scopedcss\\bundle\\LoggiFin.styles.css"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\LoggiFin.bundle.scp.css",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\LoggiFin.bundle.scp.css",
       "SourceId": "LoggiFin",
       "SourceType": "Computed",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "LoggiFin.bundle.scp.css",
       "AssetKind": "All",
@@ -116,13 +116,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\LoggiFin.bundle.scp.css"
+      "OriginalItemSpec": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\LoggiFin.bundle.scp.css"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "css/bootstrap/bootstrap.min.css",
       "AssetKind": "All",
@@ -136,10 +136,10 @@
       "OriginalItemSpec": "wwwroot\\css\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "css/bootstrap/bootstrap.min.css.map",
       "AssetKind": "All",
@@ -153,10 +153,10 @@
       "OriginalItemSpec": "wwwroot\\css\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "css/open-iconic/font/css/open-iconic-bootstrap.min.css",
       "AssetKind": "All",
@@ -170,10 +170,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.eot",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.eot",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.eot",
       "AssetKind": "All",
@@ -187,10 +187,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.eot"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.otf",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.otf",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.otf",
       "AssetKind": "All",
@@ -204,10 +204,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.otf"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.svg",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.svg",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.svg",
       "AssetKind": "All",
@@ -221,10 +221,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.svg"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.ttf",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.ttf",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.ttf",
       "AssetKind": "All",
@@ -238,10 +238,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.ttf"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.woff",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.woff",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.woff",
       "AssetKind": "All",
@@ -255,10 +255,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.woff"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\css\\open-iconic\\FONT-LICENSE",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\css\\open-iconic\\FONT-LICENSE",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "css/open-iconic/FONT-LICENSE",
       "AssetKind": "All",
@@ -272,10 +272,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\FONT-LICENSE"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\css\\open-iconic\\ICON-LICENSE",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\css\\open-iconic\\ICON-LICENSE",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "css/open-iconic/ICON-LICENSE",
       "AssetKind": "All",
@@ -289,10 +289,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\ICON-LICENSE"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\css\\open-iconic\\README.md",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\css\\open-iconic\\README.md",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "css/open-iconic/README.md",
       "AssetKind": "All",
@@ -306,10 +306,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\README.md"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\css\\site.css",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\css\\site.css",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "css/site.css",
       "AssetKind": "All",
@@ -323,10 +323,10 @@
       "OriginalItemSpec": "wwwroot\\css\\site.css"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\favicon.png",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\favicon.png",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "favicon.png",
       "AssetKind": "All",
@@ -340,10 +340,10 @@
       "OriginalItemSpec": "wwwroot\\favicon.png"
     },
     {
-      "Identity": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\Scripts\\WindowSize.js",
+      "Identity": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\Scripts\\WindowSize.js",
       "SourceId": "LoggiFin",
       "SourceType": "Discovered",
-      "ContentRoot": "E:\\Programming\\C#\\LoggiFin\\LoggiFin\\LoggiFin\\wwwroot\\",
+      "ContentRoot": "D:\\Programmieren\\C#\\Projects\\LoggiFin\\wwwroot\\",
       "BasePath": "_content/LoggiFin",
       "RelativePath": "Scripts/WindowSize.js",
       "AssetKind": "All",

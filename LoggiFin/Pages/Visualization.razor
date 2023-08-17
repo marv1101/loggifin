@@ -25,6 +25,7 @@
     </Tab>
     <Tab Title="Diagram Vermögensverteilung">
         <Content>
+            <DateInput TValue="DateOnly" Value="doughnutChartSelectedDate" ValueExpression="() => doughnutChartSelectedDate" Placeholder="Enter Month and Year" ValueChanged="(newDate) => DateChanged(newDate)" />
             <DoughnutChart @ref="capitalDistrobution" Width="@halfWidth" Class="mb-4" />
         </Content>
     </Tab>
@@ -36,6 +37,19 @@
 </Tabs>
 
 @code {
+    IEnumerable<FinLoggingDataRow> data;
+
+    List<string> labels = new List<string>();
+    List<double> einnahmen = new List<double>();
+    List<double> ausgaben = new List<double>();
+    List<double> kontostand = new List<double>();
+    List<double> sparkontostand = new List<double>();
+    List<double> scalable = new List<double>();
+    List<double> volksbank = new List<double>();
+    List<double> bargeld = new List<double>();
+    List<double> urlaubskasse = new List<double>();
+    List<double> total = new List<double>();
+
     private BarChart inOutChart;
     private LineChart capitalChange;
     private DoughnutChart capitalDistrobution;
@@ -53,24 +67,15 @@
     private int width { get; set; }
     private int halfWidth { get; set; }
 
+    private DateOnly doughnutChartSelectedDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
+
     FinLoggingDataService finLoggingDataService = new FinLoggingDataService();
 
 
     protected override void OnInitialized()
     {
 
-        IEnumerable<FinLoggingDataRow> data = finLoggingDataService.GetDataRows();
-
-        List<string> labels = new List<string>();
-        List<double> einnahmen = new List<double>();
-        List<double> ausgaben = new List<double>();
-        List<double> kontostand = new List<double>();
-        List<double> sparkontostand = new List<double>();
-        List<double> scalable = new List<double>();
-        List<double> volksbank = new List<double>();
-        List<double> bargeld = new List<double>();
-        List<double> urlaubskasse = new List<double>();
-        List<double> total = new List<double>();
+        data = finLoggingDataService.GetDataRows();
 
         foreach(FinLoggingDataRow row in data)
         {
@@ -190,5 +195,34 @@
         halfWidth = width / 2;
     }
     //Hier Diagrammme rein mit Tabs
+
+    //change von Doughnutchart Date
+    private async void DateChanged(DateOnly newDate)
+    {
+        List<double> dist = new List<double>();
+        Color[] colors = { Color.Coral, Color.Aqua, Color.DarkOliveGreen, Color.DarkSalmon, Color.Firebrick, Color.RebeccaPurple };
+
+        foreach (FinLoggingDataRow row in data)
+        {
+            if (row.date.Year == newDate.Year && row.date.Month == newDate.Month)
+            {
+                dist = new List<double> { row.kontostand, row.sparkontostand, row.scalableSparplan, row.volksbankSparplan, row.bargeld, row.urlaubskasse };
+            }
+        }
+
+        if(dist.Count > 0)
+        {
+            capitalDistrData.Datasets.Add(createDoughnutDataSetFromDoubleList(dist, colors));
+        }
+
+        if(capitalDistrobution != null)
+        {
+            await capitalDistrobution.UpdateAsync(capitalDistrData, capitalDistrobutionOptions);
+        }
+
+        doughnutChartSelectedDate = newDate;
+
+    }
+
 
 }

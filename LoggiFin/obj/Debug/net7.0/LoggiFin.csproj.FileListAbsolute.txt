@@ -172,3 +172,7 @@ D:\Programmieren\C#\Projects\LoggiFin\obj\Debug\net7.0\refint\LoggiFin.dll
 D:\Programmieren\C#\Projects\LoggiFin\obj\Debug\net7.0\LoggiFin.pdb
 D:\Programmieren\C#\Projects\LoggiFin\obj\Debug\net7.0\LoggiFin.genruntimeconfig.cache
 D:\Programmieren\C#\Projects\LoggiFin\obj\Debug\net7.0\ref\LoggiFin.dll
+D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.AspNetCore.Authorization.dll
+D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.AspNetCore.Metadata.dll
+D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.Extensions.Options.dll

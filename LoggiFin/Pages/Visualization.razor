@@ -140,6 +140,8 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await GetDimensions();
+
         if (firstRender)
         {
             await inOutChart.InitializeAsync(chartData, chartOptions);
@@ -192,7 +194,9 @@
         var dimension = await Service.GetDimensions();
         height = dimension.Height;
         width = dimension.Width;
-        halfWidth = width / 2;
+        halfWidth = (int)(width / 3);
+        Console.WriteLine(halfWidth);
+
     }
     //Hier Diagrammme rein mit Tabs
 
@@ -223,6 +227,8 @@
         doughnutChartSelectedDate = newDate;
 
     }
+
+    
 
 
 }

@@ -4,6 +4,7 @@
 @using LoggiFin.Global;
 
 @inject NavigationManager uriHelper;
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 
 <PageTitle>Data Input</PageTitle>
 
@@ -58,26 +59,37 @@
         private double urlaubskasse = 0;
         string descr = "";
         DatabaseManager mngr = new DatabaseManager(GlobalProperties.debug); //schickt die Daten noch an die TestDB
+        bool loggedIn = false;
 
         private async void sendData()
         {
-            if(descr.Replace(" ", "") != "")
+            if (loggedIn)
             {
-                mngr.insertDataIntoDb(date1, einnahmen, ausgaben, kontostand, sparkonto,
-                scalableSparplan, volksbankSparplan, descr, transfer, bargeld, urlaubskasse);
+                if (descr.Replace(" ", "") != "")
+                {
+                    mngr.insertDataIntoDb(date1, einnahmen, ausgaben, kontostand, sparkonto,
+                    scalableSparplan, volksbankSparplan, descr, transfer, bargeld, urlaubskasse);
 
-                confirmSend();
+                    confirmSend();
 
-                await Task.Delay(2000);
+                    await Task.Delay(2000);
 
-                uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+                    uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
 
-                
+
+                }
+                else
+                {
+                    denySend();
+                }
             }
             else
             {
                 denySend();
             }
+
+            
+            
 
         }
 
@@ -90,7 +102,7 @@
         private void denySend()
         {
             messages.Add(new ToastMessage(ToastType.Danger, "Daten wurden nicht gesendet gesendet", $"{DateTime.Now}",
-            $"Daten wurden nicht erfolgreich übermittelt! Bitte alles ausfüllen"));
+            $"Daten wurden nicht erfolgreich übermittelt! Bitte alles ausfüllen und anmelden"));
         }
     }
 </div>
@@ -144,23 +156,67 @@
 </Grid>
 
 @code {
-    BlazorBootstrap.Grid<FinLoggingDataRow> grid = default!;
-    private IEnumerable<FinLoggingDataRow> dataRows = default!;
+        BlazorBootstrap.Grid<FinLoggingDataRow> grid = default!;
+        private IEnumerable<FinLoggingDataRow> dataRows = default!;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-    }
+        protected override async Task OnInitializedAsync()
+        {
+            await checkLogin();
+        }
 
-        private async Task<GridDataProviderResult<FinLoggingDataRow>> LoggingRowDataProvider(GridDataProviderRequest<FinLoggingDataRow> request)
-    {
-            if (dataRows is null){
-                FinLoggingDataService finLoggingDataService = new FinLoggingDataService();
-                dataRows = finLoggingDataService.GetDataRows();
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender && !loggedIn)
+            {
+                uriHelper.NavigateTo("/login");
             }
 
-            return await Task.FromResult(request.ApplyTo(dataRows));
-    }
+            await base.OnAfterRenderAsync(firstRender);
+        }
+
+        private async Task<GridDataProviderResult<FinLoggingDataRow>> LoggingRowDataProvider(GridDataProviderRequest<FinLoggingDataRow> request)
+        {
+            if (loggedIn)
+            {
+                if (dataRows is null)
+                {
+                    FinLoggingDataService finLoggingDataService = new FinLoggingDataService();
+                    dataRows = finLoggingDataService.GetDataRows();
+                }
+                return await Task.FromResult(request.ApplyTo(dataRows));
+            }
+            else
+            {
+                return null;
+            }
+
+
+
+        }
+
+        private async Task checkLogin()
+        {
+            var token = "";
+            try
+            {
+                token = await sessionStorage.GetItemAsync<string>("LoggedIn");
+            }catch(Exception ex)
+            {
+                
+            }
+            
+
+            if (token != null && token.Equals("true"))
+            {
+                loggedIn = true;
+            }
+            else
+            {
+                loggedIn = false;
+            }
+
+            StateHasChanged();
+        }
 
 }
 </div>

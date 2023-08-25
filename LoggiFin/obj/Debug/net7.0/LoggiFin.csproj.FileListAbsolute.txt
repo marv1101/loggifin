@@ -176,3 +176,8 @@ D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.AspNetCore.Auth
 D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.AspNetCore.Metadata.dll
 D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.Extensions.Logging.Abstractions.dll
 D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.Extensions.Options.dll
+D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Blazored.SessionStorage.dll
+D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.AspNetCore.Components.dll
+D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.AspNetCore.Components.Forms.dll
+D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.AspNetCore.Components.Web.dll
+D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.JSInterop.dll

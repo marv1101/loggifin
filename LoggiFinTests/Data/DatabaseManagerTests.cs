@@ -141,5 +141,20 @@ namespace LoggiFin.Data.Tests
             //then
             Assert.IsTrue(res);
         }
+
+        [TestMethod()]
+        public void authUserTest()
+        {
+            //given
+            DatabaseManager manager = new DatabaseManager(true);
+
+            //when
+            bool res = manager.authUser("testuser", "test");
+            bool res2 = manager.authUser("testuser1", "test");
+
+            //then
+            Assert.IsTrue(res);
+            Assert.IsFalse(res2);
+        }
     }
 }

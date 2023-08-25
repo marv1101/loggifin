@@ -105,5 +105,22 @@ namespace LoggiFin.Data
             return true;
         }
 
+        public bool authUser(string username, string password)
+        {
+            string pwd;
+
+            try
+            {
+                pwd = connection.QuerySql<string>("SELECT passwd FROM users WHERE username='" + username + "'").First();
+            } catch(Exception ex)
+            {
+                return false;
+            }
+
+            if (password.Equals(pwd)) return true;
+
+            return false;
+        }
+
     }
 }

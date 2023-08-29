@@ -32,7 +32,7 @@ namespace LoggiFin.Data
 
             db = new MySqlConnectionStringBuilder(connectionString);
             connection = db.Connection();
-
+            connection.Open();
         }
 
         public List<Finanzdaten> getData()
@@ -114,12 +114,59 @@ namespace LoggiFin.Data
                 pwd = connection.QuerySql<string>("SELECT passwd FROM users WHERE username='" + username + "'").First();
             } catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return false;
             }
 
             if (password.Equals(pwd)) return true;
 
             return false;
+        }
+
+        public bool removeData(int datasetID_PK)
+        {
+
+            List<Finanzdaten> res = (List<Finanzdaten>)connection.QuerySql<Finanzdaten>("SELECT * FROM finanzdaten WHERE datasetID_PK=" + datasetID_PK);
+
+            if (res == null) return false;
+            if (res.Count == 0) return false;
+
+            Finanzdaten finanzdaten = res.First();
+
+            int kontodatenID_FK = finanzdaten.kontodatenID_FK;
+            int investmentdatenID_FK = finanzdaten.investdatenID_FK;
+            int transferdatenID_FK = finanzdaten.transferdatenID_FK;
+            int bargelddatenID_FK = finanzdaten.bargelddatenID_FK;
+
+
+            int deleted = 0;
+
+            try
+            {
+                deleted = connection.ExecuteSql("DELETE FROM finanzdaten WHERE datasetID_PK = " + datasetID_PK);
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return false;
+            }
+            
+            if(deleted != 0)
+            {
+                deleted = connection.ExecuteSql("DELETE FROM bargelddaten WHERE bargelddatenID_PK = " + bargelddatenID_FK);
+                if (deleted == 0) return false;
+                deleted = connection.ExecuteSql("DELETE FROM investmentdaten WHERE investdatenID_PK = " + investmentdatenID_FK);
+                if (deleted == 0) return false;
+                deleted = connection.ExecuteSql("DELETE FROM kontodaten WHERE kontodatenID_PK = " + kontodatenID_FK);
+                if (deleted == 0) return false;
+                deleted = connection.ExecuteSql("DELETE FROM transferdaten WHERE transferdatenID_PK = " + transferdatenID_FK);
+                if (deleted == 0) return false;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
         }
 
     }

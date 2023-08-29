@@ -334,3 +334,8 @@ D:\Programmieren\C#\Projects\LoggiFinTests\obj\Debug\net7.0\refint\LoggiFinTests
 D:\Programmieren\C#\Projects\LoggiFinTests\obj\Debug\net7.0\LoggiFinTests.pdb
 D:\Programmieren\C#\Projects\LoggiFinTests\obj\Debug\net7.0\LoggiFinTests.genruntimeconfig.cache
 D:\Programmieren\C#\Projects\LoggiFinTests\obj\Debug\net7.0\ref\LoggiFinTests.dll
+D:\Programmieren\C#\Projects\LoggiFinTests\bin\Debug\net7.0\Blazored.SessionStorage.dll
+D:\Programmieren\C#\Projects\LoggiFinTests\bin\Debug\net7.0\Microsoft.AspNetCore.Components.dll
+D:\Programmieren\C#\Projects\LoggiFinTests\bin\Debug\net7.0\Microsoft.AspNetCore.Components.Forms.dll
+D:\Programmieren\C#\Projects\LoggiFinTests\bin\Debug\net7.0\Microsoft.AspNetCore.Components.Web.dll
+D:\Programmieren\C#\Projects\LoggiFinTests\bin\Debug\net7.0\Microsoft.JSInterop.dll

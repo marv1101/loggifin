@@ -12,6 +12,8 @@
 
 <h1>Daten Eingeben</h1>
 
+<ConfirmDialog @ref="dialog" />
+
 <div>
     <p>Bitte die Daten eingeben.</p>
 </div>
@@ -42,6 +44,11 @@
         <CurrencyInput TValue="double" @bind-Value="@urlaubskasse" Placeholder="Urlaubskasse" />
         <br />
         <Button Color="ButtonColor.Success" Outline="true" @onclick="() => sendData()"> Daten senden </Button>
+
+        <br /><br />
+        <label>ID zum löschen</label>
+        <NumberInput TValue="int" @bind-Value="@idToDelete" Placeholder="Enter ID"  />
+        <Button Color="ButtonColor.Danger" @onclick="deleteData"> Delete Employee </Button>
     </div>
     <div class="mb-3">Entered date: @date1</div>
 
@@ -60,6 +67,9 @@
         string descr = "";
         DatabaseManager mngr = new DatabaseManager(GlobalProperties.debug); //schickt die Daten noch an die TestDB
         bool loggedIn = false;
+
+        private ConfirmDialog dialog;
+        int idToDelete = -1;
 
         private async void sendData()
         {
@@ -88,8 +98,33 @@
                 denySend();
             }
 
-            
-            
+
+
+
+        }
+
+        private async Task deleteData()
+        {
+            if (loggedIn)
+            {
+                var confirmation = await dialog.ShowAsync(
+                title: "Wirklich löschen?",
+                message1: "Eintrag wird gelöscht. Aktion kann nicht rückgängig gemacht werden.",
+                message2: "Fortfahren?");
+
+                if (confirmation)
+                {
+                    mngr.removeData(idToDelete);
+
+                    await Task.Delay(2000);
+
+                    uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+                }
+                else
+                {
+
+                }
+            }
 
         }
 

@@ -156,5 +156,19 @@ namespace LoggiFin.Data.Tests
             Assert.IsTrue(res);
             Assert.IsFalse(res2);
         }
+
+        [TestMethod()]
+        public void removeDataTest()
+        {
+            //given
+            DatabaseManager manager = new DatabaseManager(true);
+
+            //when
+            bool res = manager.removeData(41);
+
+            //then
+            Assert.IsFalse(res);
+
+        }
     }
 }

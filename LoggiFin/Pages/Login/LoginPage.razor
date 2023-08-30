@@ -1,0 +1,69 @@
+﻿@page "/login"
+
+@using LoggiFin.Data
+@using LoggiFin.Global
+
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+
+<h3>LoginPage</h3>
+
+<Callout Type="CalloutType.Warning"><strong>Bitte melde dich an</strong></Callout>
+
+<label for="user">Username</label>
+<InputText id="user" placeholder="username" @bind-Value="@username"></InputText> <br />
+<label for="pwd">Password</label>
+<InputText id="pwd" type="password" @bind-Value="@password"></InputText>
+
+<br /><br />
+
+<Button Color="ButtonColor.Info" @onclick="() => Login()">Login</Button>
+
+<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.BottomCenter" />
+
+
+@code {
+
+    DatabaseManager dbm = new DatabaseManager(GlobalProperties.debug);
+
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+
+
+
+    private string username = "guest";
+    private string password = "";
+
+    private async Task Login()
+    {
+        bool res = dbm.authUser(username, password);
+
+        if (res)
+        {
+            messages.Add(new ToastMessage
+                {
+                    Type = ToastType.Success,
+                    Title = "Erfolreich eingeloggt!",
+                    HelpText = $"{DateTime.Now}",
+                });
+
+
+            //var name = await sessionStorage.GetItemAsync<string>("name");
+            
+            
+            await sessionStorage.SetItemAsync("LoggedIn", "true");
+            
+        }
+        else
+        {
+            messages.Add(new ToastMessage
+                {
+                    Type = ToastType.Danger,
+                    Title = "Login fehlgeschlagen!",
+                    HelpText = $"{DateTime.Now}",
+                });
+
+            await sessionStorage.SetItemAsync("LoggedIn", "false");
+        }
+    }
+
+}

@@ -179,6 +179,12 @@
           }
         }
       },
+      "JunitXml.TestLogger/3.0.134": {
+        "type": "package",
+        "build": {
+          "build/netstandard1.5/_._": {}
+        }
+      },
       "K4os.Compression.LZ4/1.3.5": {
         "type": "package",
         "compile": {
@@ -2250,6 +2256,7 @@
           "Insight.Database": "6.3.11",
           "Insight.Database.Providers.MySql": "6.3.11",
           "Insight.Database.Providers.MySqlConnector": "6.3.11",
+          "JunitXml.TestLogger": "3.0.134",
           "Microsoft.AspNetCore.Authorization": "7.0.10",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.18.1",
           "MySql.Data": "8.1.0",
@@ -2496,6 +2503,23 @@
         "lib/net451/Insight.Database.Providers.MySqlConnector.xml",
         "lib/netstandard2.0/Insight.Database.Providers.MySqlConnector.dll",
         "lib/netstandard2.0/Insight.Database.Providers.MySqlConnector.xml"
+      ]
+    },
+    "JunitXml.TestLogger/3.0.134": {
+      "sha512": "KoZInijT7rUEXGEOGUQfzLBZFaA65A7g6AhosHCI/aPuqxYMq40wUOO3kynor8QQhbgU+lpLFmhAxNb3+JoCfQ==",
+      "type": "package",
+      "path": "junitxml.testlogger/3.0.134",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/_common/Microsoft.VisualStudio.TestPlatform.Extension.JUnit.Xml.TestAdapter.dll",
+        "build/_common/Microsoft.VisualStudio.TestPlatform.Extension.JUnit.Xml.TestLogger.dll",
+        "build/_common/Spekt.TestLogger.dll",
+        "build/net46/JUnitXml.TestLogger.props",
+        "build/netstandard1.5/JUnitXml.TestLogger.props",
+        "junitxml.testlogger.3.0.134.nupkg.sha512",
+        "junitxml.testlogger.nuspec",
+        "packageIcon.png"
       ]
     },
     "K4os.Compression.LZ4/1.3.5": {

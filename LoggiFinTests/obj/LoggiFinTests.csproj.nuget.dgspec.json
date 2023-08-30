@@ -147,6 +147,10 @@
               "target": "Package",
               "version": "[6.3.11, )"
             },
+            "JunitXml.TestLogger": {
+              "target": "Package",
+              "version": "[3.0.134, )"
+            },
             "Microsoft.AspNetCore.Authorization": {
               "target": "Package",
               "version": "[7.0.10, )"

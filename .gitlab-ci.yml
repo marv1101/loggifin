@@ -99,27 +99,23 @@ build:
   # path to the directory where it is located (e.g. 'dotnet build ./src/ConsoleApp').
   # Only one project path can be passed as a parameter to 'dotnet build' command.
   script:
-    - 'dotnet build --no-restore'
+    - 'dotnet restore'
+    - 'dotnet build'
 
-tests:
+test:
   stage: test
-  # ### Run the tests
-  #
-  # You can either run tests for all test projects that are defined in your solution
-  # with 'dotnet test' or run tests only for specific project by specifying
-  # a relative path to the directory where it is located (e.g. 'dotnet test ./test/UnitTests').
-  #
-  # You may want to define separate testing jobs for different types of testing
-  # (e.g. integration tests, unit tests etc).
-  script:
+  script: 
     - 'dotnet test --test-adapter-path:. --logger:"junit;LogFilePath=..\artifacts\{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"'
   artifacts:
     when: always
-    paths:
-      - ./**/*test-result.xml
+    paths: 
+     - ./**/*test-result.xml
     reports:
-      junit:
-        - ./**/*test-result.xml
+      junit: 
+       - ./**/*test-result.xml
+  tags:
+    - docker
+
 
 deploy:
   stage: deploy

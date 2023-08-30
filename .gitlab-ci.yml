@@ -113,8 +113,6 @@ test:
     reports:
       junit: 
        - ./**/*test-result.xml
-  tags:
-    - docker
 
 
 deploy:

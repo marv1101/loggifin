@@ -131,6 +131,10 @@
               "target": "Package",
               "version": "[1.9.5, )"
             },
+            "Blazored.SessionStorage": {
+              "target": "Package",
+              "version": "[2.4.0, )"
+            },
             "Insight.Database": {
               "target": "Package",
               "version": "[6.3.11, )"

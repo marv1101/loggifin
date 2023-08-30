@@ -31,3 +31,11 @@ msbuild.err
 msbuild.wrn
 /.vs/LoggiFin/FileContentIndex
 /.vs/*
+/.vs/LoggiFin/DesignTimeBuild/.dtbcache.v2
+/.vs/LoggiFin/v17/.futdcache.v2
+/.vs/ProjectEvaluation/loggifin.metadata.v7.bin
+/.vs/ProjectEvaluation/loggifin.projects.v7.bin
+/LoggiFin/obj/Container/ContainerDevelopmentMode.cache
+/LoggiFin/obj/Container/ContainerId.cache
+/LoggiFin/obj/Container/ContainerName.cache
+/LoggiFin/obj/Container/ContainerRunContext.cache

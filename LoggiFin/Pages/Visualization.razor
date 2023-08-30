@@ -6,6 +6,8 @@
 @using LoggiFin.Global;
 
 @inject BrowserService Service
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject NavigationManager uriHelper;
 
 
 <PageTitle>Diagrams</PageTitle>
@@ -71,84 +73,104 @@
 
     FinLoggingDataService finLoggingDataService = new FinLoggingDataService();
 
+    bool loggedIn = false;
 
-    protected override void OnInitialized()
+
+    protected override async void OnInitialized()
     {
+        await checkLogin();
 
-        data = finLoggingDataService.GetDataRows();
-
-        foreach(FinLoggingDataRow row in data)
+        if (loggedIn)
         {
-            labels.Add(row.date.ToString());
-            einnahmen.Add(row.einnahmen);
-            ausgaben.Add(row.ausgaben);
-            kontostand.Add(row.kontostand);
-            sparkontostand.Add(row.sparkontostand);
-            scalable.Add(row.scalableSparplan);
-            volksbank.Add(row.volksbankSparplan);
-            bargeld.Add(row.bargeld);
-            urlaubskasse.Add(row.urlaubskasse);
-            total.Add(row.totalBalance);
+            data = finLoggingDataService.GetDataRows();
+
+            foreach (FinLoggingDataRow row in data)
+            {
+                labels.Add(row.date.ToString());
+                einnahmen.Add(row.einnahmen);
+                ausgaben.Add(row.ausgaben);
+                kontostand.Add(row.kontostand);
+                sparkontostand.Add(row.sparkontostand);
+                scalable.Add(row.scalableSparplan);
+                volksbank.Add(row.volksbankSparplan);
+                bargeld.Add(row.bargeld);
+                urlaubskasse.Add(row.urlaubskasse);
+                total.Add(row.totalBalance);
+            }
+
+            chartData = new ChartData
+                {
+                    Labels = labels,
+                    Datasets = new List<IChartDataset>()
+                };
+
+            chartData.Datasets.Add(createDataSetFromDoubleList("Einnahmen", einnahmen, Color.LightGreen));
+            chartData.Datasets.Add(createDataSetFromDoubleList("Ausgaben", ausgaben, Color.IndianRed));
+
+            chartDataCapital = new ChartData
+                {
+                    Labels = labels,
+                    Datasets = new List<IChartDataset>()
+                };
+
+            chartDataCapital.Datasets.Add(createLineDataSetFromDoubleList("Gesamtvermögen", total, Color.LightSkyBlue));
+
+            capitalDistrData = new ChartData
+                {
+                    Labels = new List<string> { "Kontostand", "Sparkontostand", "Scalable", "Volksbank", "Bargeld", "Urlaubsgeld" },
+                    Datasets = new List<IChartDataset>()
+                };
+
+            List<double> dist = new List<double> { kontostand.Last(), sparkontostand.Last(), scalable.Last(), volksbank.Last(), bargeld.Last(), urlaubskasse.Last() };
+            Color[] colors = { Color.Coral, Color.Aqua, Color.DarkOliveGreen, Color.DarkSalmon, Color.Firebrick, Color.RebeccaPurple };
+
+            capitalDistrData.Datasets.Add(createDoughnutDataSetFromDoubleList(dist, colors));
+
+            chartOptions = new BarChartOptions
+                {
+                    Responsive = true,
+                    Interaction = new Interaction { Mode = InteractionMode.Index }
+                };
+
+            lineChartOptions = new LineChartOptions
+                {
+                    Responsive = true,
+                    Interaction = new Interaction { Mode = InteractionMode.Index }
+                };
+
+            capitalDistrobutionOptions = new DoughnutChartOptions
+                {
+                    Responsive = true
+                };
+        }
+        else
+        {
+            
         }
 
-        chartData = new ChartData
-            {
-                Labels = labels,
-                Datasets = new List<IChartDataset>()
-            };
 
-        chartData.Datasets.Add(createDataSetFromDoubleList("Einnahmen", einnahmen, Color.LightGreen));
-        chartData.Datasets.Add(createDataSetFromDoubleList("Ausgaben", ausgaben, Color.IndianRed));
-
-        chartDataCapital = new ChartData
-            {
-                Labels = labels,
-                Datasets = new List<IChartDataset>()
-            };
-
-        chartDataCapital.Datasets.Add(createLineDataSetFromDoubleList("Gesamtvermögen", total, Color.LightSkyBlue));
-
-        capitalDistrData = new ChartData
-        {
-            Labels = new List<string> {"Kontostand", "Sparkontostand", "Scalable", "Volksbank", "Bargeld", "Urlaubsgeld"},
-            Datasets = new List<IChartDataset>()
-        };
-
-        List<double> dist = new List<double> { kontostand.Last(), sparkontostand.Last(), scalable.Last(), volksbank.Last(), bargeld.Last(), urlaubskasse.Last() };
-        Color[] colors = { Color.Coral, Color.Aqua, Color.DarkOliveGreen, Color.DarkSalmon, Color.Firebrick, Color.RebeccaPurple };
-
-        capitalDistrData.Datasets.Add(createDoughnutDataSetFromDoubleList(dist, colors));
-
-        chartOptions = new BarChartOptions
-            {
-                Responsive = true,
-                Interaction = new Interaction { Mode = InteractionMode.Index }
-            };
-
-        lineChartOptions = new LineChartOptions
-            {
-                Responsive = true,
-                Interaction = new Interaction { Mode = InteractionMode.Index }
-            };
-
-        capitalDistrobutionOptions = new DoughnutChartOptions
-            {
-                Responsive = true
-            };
 
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await GetDimensions();
-
-        if (firstRender)
+        if (loggedIn)
         {
-            await inOutChart.InitializeAsync(chartData, chartOptions);
-            await capitalChange.UpdateAsync(chartDataCapital, lineChartOptions);
-            await capitalDistrobution.InitializeAsync(capitalDistrData, capitalDistrobutionOptions);
+            await GetDimensions();
+
+            if (firstRender)
+            {
+                await inOutChart.InitializeAsync(chartData, chartOptions);
+                await capitalChange.UpdateAsync(chartDataCapital, lineChartOptions);
+                await capitalDistrobution.InitializeAsync(capitalDistrData, capitalDistrobutionOptions);
+            }
+            await base.OnAfterRenderAsync(firstRender);
         }
-        await base.OnAfterRenderAsync(firstRender);
+        else
+        {
+            uriHelper.NavigateTo("/login");
+        }
+
     }
 
     private BarChartDataset createDataSetFromDoubleList(string label, List<double> data, Color color)
@@ -195,7 +217,6 @@
         height = dimension.Height;
         width = dimension.Width;
         halfWidth = (int)(width / 3);
-        Console.WriteLine(halfWidth);
 
     }
     //Hier Diagrammme rein mit Tabs
@@ -203,32 +224,62 @@
     //change von Doughnutchart Date
     private async void DateChanged(DateOnly newDate)
     {
-        List<double> dist = new List<double>();
-        Color[] colors = { Color.Coral, Color.Aqua, Color.DarkOliveGreen, Color.DarkSalmon, Color.Firebrick, Color.RebeccaPurple };
-
-        foreach (FinLoggingDataRow row in data)
+        if (loggedIn)
         {
-            if (row.date.Year == newDate.Year && row.date.Month == newDate.Month)
+            List<double> dist = new List<double>();
+            Color[] colors = { Color.Coral, Color.Aqua, Color.DarkOliveGreen, Color.DarkSalmon, Color.Firebrick, Color.RebeccaPurple };
+
+            if(data != null)
             {
-                dist = new List<double> { row.kontostand, row.sparkontostand, row.scalableSparplan, row.volksbankSparplan, row.bargeld, row.urlaubskasse };
+                foreach (FinLoggingDataRow row in data)
+                {
+                    if (row.date.Year == newDate.Year && row.date.Month == newDate.Month)
+                    {
+                        dist = new List<double> { row.kontostand, row.sparkontostand, row.scalableSparplan, row.volksbankSparplan, row.bargeld, row.urlaubskasse };
+                    }
+                }
+
+                if (dist.Count > 0)
+                {
+                    capitalDistrData.Datasets.Add(createDoughnutDataSetFromDoubleList(dist, colors));
+                }
+
+                if (capitalDistrobution != null)
+                {
+                    await capitalDistrobution.UpdateAsync(capitalDistrData, capitalDistrobutionOptions);
+                }
+
+                doughnutChartSelectedDate = newDate;
             }
+            
         }
-
-        if(dist.Count > 0)
-        {
-            capitalDistrData.Datasets.Add(createDoughnutDataSetFromDoubleList(dist, colors));
-        }
-
-        if(capitalDistrobution != null)
-        {
-            await capitalDistrobution.UpdateAsync(capitalDistrData, capitalDistrobutionOptions);
-        }
-
-        doughnutChartSelectedDate = newDate;
 
     }
 
-    
+    private async Task checkLogin()
+    {
+        var token = "";
+        try
+        {
+            token = await sessionStorage.GetItemAsync<string>("LoggedIn");
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+
+        if (token != null && token.Equals("true"))
+        {
+            loggedIn = true;
+        }
+        else
+        {
+            loggedIn = false;
+        }
+
+        StateHasChanged();
+    }
 
 
 }

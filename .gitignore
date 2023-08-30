@@ -31,3 +31,8 @@ msbuild.err
 msbuild.wrn
 /.vs/LoggiFin/FileContentIndex
 /.vs/*
+/.vs/LoggiFin/v17/TestStore/0/testlog.manifest
+/.vs/LoggiFin/DesignTimeBuild/.dtbcache.v2
+/.vs/LoggiFin/v17/.suo
+/LoggiFin/obj/Debug/net7.0/project.razor.vs.json
+/LoggiFinTests/obj/Debug/net7.0/LoggiFinTests.csproj.AssemblyReference.cache

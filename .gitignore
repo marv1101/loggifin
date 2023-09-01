@@ -38,4 +38,6 @@ msbuild.wrn
 /LoggiFin/obj/Container/ContainerDevelopmentMode.cache
 /LoggiFin/obj/Container/ContainerId.cache
 /LoggiFin/obj/Container/ContainerName.cache
-/LoggiFin/obj/Container/ContainerRunContext.cache
+/LoggiFin/obj/*
+/LoggiFin/bin/*
+/LoggiFinTests/bin/Debug/net7.0/LoggiFin.deps.json

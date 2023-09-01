@@ -19,6 +19,8 @@
 # Learn more about Docker tags: https://docs.docker.com/glossary/?term=tag
 # and the Docker itself: https://opensource.com/resources/what-docker
 image: mcr.microsoft.com/dotnet/sdk:7.0
+include:
+  template: Jobs/Code-Quality.gitlab-ci.yml
 
 # ### Define variables
 #
@@ -98,6 +100,7 @@ build:
   # or build every .NET Core-based project by explicitly specifying a relative
   # path to the directory where it is located (e.g. 'dotnet build ./src/ConsoleApp').
   # Only one project path can be passed as a parameter to 'dotnet build' command.
+  dependencies: [build]
   script:
     - 'dotnet restore'
     - 'dotnet build'

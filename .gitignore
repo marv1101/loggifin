@@ -40,4 +40,5 @@ msbuild.wrn
 /LoggiFin/obj/Container/ContainerName.cache
 /LoggiFin/obj/*
 /LoggiFin/bin/*
-/LoggiFinTests/bin/Debug/net7.0/LoggiFin.deps.json
+/LoggiFinTests/bin/*
+/LoggiFinTests/obj/*

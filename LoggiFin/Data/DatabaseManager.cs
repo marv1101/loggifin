@@ -32,12 +32,11 @@ namespace LoggiFin.Data
 
             db = new MySqlConnectionStringBuilder(connectionString);
             connection = db.Connection();
-            connection.Open();
         }
 
         public List<Finanzdaten> getData()
         {
-            List<Finanzdaten> res = (List<Finanzdaten>) connection.QuerySql<Finanzdaten>("SELECT * FROM finanzdaten");
+            List<Finanzdaten> res = (List<Finanzdaten>) connection.QuerySql<Finanzdaten>("SELECT * FROM finanzdaten ORDER BY entryDate ASC");
 
             return res;
         }

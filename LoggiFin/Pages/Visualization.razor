@@ -22,7 +22,7 @@
     </Tab>
     <Tab Title="Diagram Vermögensentwicklung">
         <Content>
-            <LineChart @ref="capitalChange" Width="@width" Class="mb-4" />
+            <LineChart @ref="capitalChange" Width="@widthMinHundred" Class="mb-4" />
         </Content>
     </Tab>
     <Tab Title="Diagram Vermögensverteilung">
@@ -68,6 +68,7 @@
     private int height { get; set; }
     private int width { get; set; }
     private int halfWidth { get; set; }
+    private int widthMinHundred { get; set; }
 
     private DateOnly doughnutChartSelectedDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
 
@@ -216,8 +217,8 @@
         var dimension = await Service.GetDimensions();
         height = dimension.Height;
         width = dimension.Width;
-        halfWidth = (int)(width / 3);
-
+        halfWidth = (int)(width / 2);
+        widthMinHundred = (int)(width - (width / 6));
     }
     //Hier Diagrammme rein mit Tabs
 

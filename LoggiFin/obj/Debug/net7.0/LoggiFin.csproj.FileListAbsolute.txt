@@ -181,3 +181,6 @@ D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.AspNetCore.Comp
 D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.AspNetCore.Components.Forms.dll
 D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.AspNetCore.Components.Web.dll
 D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.JSInterop.dll
+D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.VisualStudio.TestPlatform.Extension.JUnit.Xml.TestLogger.dll
+D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Microsoft.VisualStudio.TestPlatform.Extension.JUnit.Xml.TestAdapter.dll
+D:\Programmieren\C#\Projects\LoggiFin\bin\Debug\net7.0\Spekt.TestLogger.dll

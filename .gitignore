@@ -44,4 +44,15 @@ msbuild.wrn
 /LoggiFinTests/obj/*
 /LoggiFin/obj/Debug/net7.0/project.razor.vs.json
 /.vs/LoggiFin/v17/.suo
+/LoggiFinTests/bin/Debug/net7.0/LoggiFin.dll
+/LoggiFinTests/bin/Debug/net7.0/LoggiFin.pdb
+/LoggiFinTests/bin/Debug/net7.0/LoggiFinTests.dll
+/LoggiFinTests/bin/Debug/net7.0/LoggiFinTests.pdb
+/LoggiFinTests/obj/Debug/net7.0/LoggiFinTests.csproj.AssemblyReference.cache
+/LoggiFinTests/obj/Debug/net7.0/LoggiFinTests.dll
+/LoggiFinTests/obj/Debug/net7.0/LoggiFinTests.pdb
 /.vs/LoggiFin/v17/TestStore/0/testlog.manifest
+/LoggiFin/bin/Debug/net7.0/LoggiFin.dll
+/LoggiFin/bin/Debug/net7.0/LoggiFin.pdb
+/LoggiFin/obj/Debug/net7.0/LoggiFin.dll
+/LoggiFin/obj/Debug/net7.0/LoggiFin.pdb

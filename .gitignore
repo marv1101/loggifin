@@ -42,3 +42,5 @@ msbuild.wrn
 /LoggiFin/bin/*
 /LoggiFinTests/bin/*
 /LoggiFinTests/obj/*
+/LoggiFin/obj/Debug/net7.0/project.razor.vs.json
+/.vs/LoggiFin/v17/.suo

@@ -146,7 +146,7 @@
         }
         else
         {
-            
+
         }
 
 
@@ -225,8 +225,10 @@
     //change von Doughnutchart Date
     private async void DateChanged(DateOnly newDate)
     {
+        
         if (loggedIn)
         {
+            data = finLoggingDataService.GetDataRows();
             List<double> dist = new List<double>();
             Color[] colors = { Color.Coral, Color.Aqua, Color.DarkOliveGreen, Color.DarkSalmon, Color.Firebrick, Color.RebeccaPurple };
 

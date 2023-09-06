@@ -168,5 +168,10 @@ namespace LoggiFin.Data
             
         }
 
+        public List<Abokosten> getAbokosten()
+        {
+            return (List<Abokosten>)connection.QuerySql<Abokosten>("SELECT * FROM abokosten");
+        }
+
     }
 }

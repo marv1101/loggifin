@@ -170,5 +170,22 @@ namespace LoggiFin.Data.Tests
             Assert.IsFalse(res);
 
         }
+
+        [TestMethod()]
+        public void getAbokostenTest()
+        {
+            //given
+            DatabaseManager manager = new DatabaseManager(true);
+            //when
+            List<Abokosten> abokosten = manager.getAbokosten();
+            Abokosten abo = abokosten.First();
+            //then
+            Assert.IsNotNull(abokosten);
+            Assert.IsFalse(abokosten.Count == 0);
+            Assert.IsNotNull(abo);
+            Assert.AreEqual(abo.titel, "Testabo");
+            Assert.AreEqual(abo.aboID_PK, 1);
+
+        }
     }
 }

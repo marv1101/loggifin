@@ -149,7 +149,8 @@
       DataProvider="LoggingRowDataProvider"
       AllowFiltering="true"
       AllowSorting="true"
-      Responsive="true">
+      Responsive="true"
+      RowClass="getRowClass">
 
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Id" PropertyName="rowId">
         @context.rowId
@@ -227,6 +228,18 @@
 
 
 
+        }
+
+        private string getRowClass(FinLoggingDataRow finLoggingDataRow)
+        {
+            if(finLoggingDataRow.ausgaben > finLoggingDataRow.einnahmen)
+            {
+                return "table-danger";
+            }
+            else
+            {
+                return "";
+            }
         }
 
         private async Task checkLogin()

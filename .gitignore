@@ -56,3 +56,6 @@ msbuild.wrn
 /LoggiFin/bin/Debug/net7.0/LoggiFin.pdb
 /LoggiFin/obj/Debug/net7.0/LoggiFin.dll
 /LoggiFin/obj/Debug/net7.0/LoggiFin.pdb
+/LoggiFin/obj/Container/ContainerCreationResult.cache
+/LoggiFin/obj/Debug/net7.0/ref/LoggiFin.dll
+/LoggiFin/obj/Debug/net7.0/refint/LoggiFin.dll

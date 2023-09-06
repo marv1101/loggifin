@@ -59,3 +59,17 @@ msbuild.wrn
 /LoggiFin/obj/Container/ContainerCreationResult.cache
 /LoggiFin/obj/Debug/net7.0/ref/LoggiFin.dll
 /LoggiFin/obj/Debug/net7.0/refint/LoggiFin.dll
+/LoggiFin/obj/Container/AbsoluteOutputAssemblyPath.cache
+/LoggiFin/obj/Container/AdditionalProbingPaths.cache
+/LoggiFin/obj/Container/ContainerOperatingSystemFlavor.cache
+/LoggiFin/obj/Container/DebuggeeArguments.cache
+/LoggiFin/obj/Container/DebuggeeKillProcessCommand.cache
+/LoggiFin/obj/Container/DebuggeeProgram.cache
+/LoggiFin/obj/Container/DebuggeeWorkingDirectory.cache
+/LoggiFin/obj/Container/FastModeProjectMountDirectory.cache
+/LoggiFin/obj/Container/ImageBuildContext.cache
+/LoggiFin/obj/Container/ImageId.cache
+/LoggiFin/obj/Container/OperatingSystemName.cache
+/LoggiFin/obj/Container/TargetFramework.cache
+/LoggiFin/obj/Container/VolumeMappings.cache
+/LoggiFin/obj/Container/VsDbgScript.cache

@@ -9,11 +9,13 @@ namespace LoggiFin.Data
         private int rownum = -1;
         DatabaseManager dbm;
         IEnumerable<FinLoggingDataRow> dataRows;
+        List<Abokosten> abokosten;
 
         public FinLoggingDataService()
         {
             dbm = new DatabaseManager(GlobalProperties.debug);
             List<Finanzdaten> finanzdaten = dbm.getData();
+            abokosten = dbm.getAbokosten();
 
             List<FinLoggingDataRow> data = new List<FinLoggingDataRow>();
             Kontodaten kdt;
@@ -54,6 +56,11 @@ namespace LoggiFin.Data
         public IEnumerable<FinLoggingDataRow> GetDataRows()
         {
             return this.dataRows;
+        }
+
+        public List<Abokosten> GetAbokosten()
+        {
+            return this.abokosten;
         }
 
     }

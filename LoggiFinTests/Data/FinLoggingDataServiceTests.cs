@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using LoggiFin.DBO;
 
 namespace LoggiFin.Data.Tests
 {
@@ -25,6 +26,21 @@ namespace LoggiFin.Data.Tests
             Assert.IsTrue(res.First().beschreibung.Length != 0);
 
             Trace.WriteLine(res.First().beschreibung);
+        }
+
+        [TestMethod()]
+        public void GetAbokostenTest()
+        {
+            //given
+            FinLoggingDataService loggingDataService = new FinLoggingDataService();
+            //when
+            List<Abokosten> res = loggingDataService.GetAbokosten();
+            //then
+            Assert.IsNotNull(res);
+            Assert.IsFalse(res.Count() == 0);
+            Assert.IsTrue(res.First().kosten != 0);
+
+            Trace.WriteLine(res.First().titel);
         }
     }
 }

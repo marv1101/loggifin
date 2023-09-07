@@ -48,7 +48,7 @@
         <br /><br />
         <label>ID zum löschen</label>
         <NumberInput TValue="int" @bind-Value="@idToDelete" Placeholder="ID eingeben"  />
-        <Button Color="ButtonColor.Danger" @onclick="deleteData"> Datenreige löschen </Button>
+        <Button Color="ButtonColor.Danger" @onclick="deleteData"> Datenreihe löschen </Button>
     </div>
     <div class="mb-3">Entered date: @date1</div>
 
@@ -65,7 +65,7 @@
         private double bargeld = 0;
         private double urlaubskasse = 0;
         string descr = "";
-        DatabaseManager mngr = new DatabaseManager(GlobalProperties.debug); //schickt die Daten noch an die TestDB
+        DatabaseManager mngr = new DatabaseManager(GlobalProperties.debug); //schickt die Daten entweder an TestDB oder an Prod
         bool loggedIn = false;
 
         private ConfirmDialog dialog;

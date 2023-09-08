@@ -4,6 +4,7 @@
 @using Color = System.Drawing.Color
 @using LoggiFin.Data
 @using LoggiFin.Global;
+@using LoggiFin.DBO;
 
 @inject BrowserService Service
 @inject Blazored.SessionStorage.ISessionStorageService sessionStorage
@@ -31,15 +32,17 @@
             <DoughnutChart @ref="capitalDistrobution" Width="@halfWidth" Class="mb-4" />
         </Content>
     </Tab>
-    <Tab Title="Diagram 4">
+    <Tab Title="laufende Kosten Verteilung">
         <Content>
-            <p class="mt-3">This is the placeholder content for the <b>Diagram 4</b> tab.</p>
+            <label>Gesamt: @abokostenTotal.Sum()</label>
+            <DoughnutChart @ref="aboDistrobution" Width="@halfWidth" Class="mb-4" />
         </Content>
     </Tab>
 </Tabs>
 
 @code {
     IEnumerable<FinLoggingDataRow> data;
+    List<Abokosten> abokosten;
 
     List<string> labels = new List<string>();
     List<double> einnahmen = new List<double>();
@@ -52,18 +55,24 @@
     List<double> urlaubskasse = new List<double>();
     List<double> total = new List<double>();
 
+    List<string> aboTitel = new List<string>();
+    List<double> abokostenTotal = new List<double>();
+
     private BarChart inOutChart;
     private LineChart capitalChange;
     private DoughnutChart capitalDistrobution;
+    private DoughnutChart aboDistrobution;
 
 
     private BarChartOptions chartOptions;
     private DoughnutChartOptions capitalDistrobutionOptions;
+    private DoughnutChartOptions aboDistrobutionOptions;
     private LineChartOptions lineChartOptions;
 
     private ChartData chartData;
     private ChartData chartDataCapital;
     private ChartData capitalDistrData;
+    private ChartData aboDistrData;
 
     private int height { get; set; }
     private int width { get; set; }
@@ -73,6 +82,8 @@
     private DateOnly doughnutChartSelectedDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
 
     FinLoggingDataService finLoggingDataService = new FinLoggingDataService();
+
+    Random rand = new Random();
 
     bool loggedIn = false;
 
@@ -84,6 +95,7 @@
         if (loggedIn)
         {
             data = finLoggingDataService.GetDataRows();
+            abokosten = finLoggingDataService.GetAbokosten();
 
             foreach (FinLoggingDataRow row in data)
             {
@@ -99,6 +111,35 @@
                 total.Add(row.totalBalance);
             }
 
+            //Abokosten
+            foreach (Abokosten abos in abokosten)
+            {
+                double totalPrice = abos.kosten;
+                double deductSharing = abos.geteilt;
+
+                abokostenTotal.Add(totalPrice - deductSharing);
+                aboTitel.Add(abos.titel);
+            }
+
+            aboDistrData = new ChartData
+                {
+                    Labels = aboTitel,
+                    Datasets = new List<IChartDataset>()
+                };
+
+            List<Color> col = new List<Color>();
+
+            for(int i = 0;i < abokostenTotal.Count; i++)
+            {
+                int r = rand.Next(255);
+                int g = rand.Next(255);
+                int b = rand.Next(255);
+                col.Add(Color.FromArgb (r, g, b));
+            }
+
+            aboDistrData.Datasets.Add(createDoughnutDataSetFromDoubleList(abokostenTotal, col.ToArray()));
+
+            //Einnahmen vs Ausgaben
             chartData = new ChartData
                 {
                     Labels = labels,
@@ -114,8 +155,10 @@
                     Datasets = new List<IChartDataset>()
                 };
 
+            //Gesamtvermögen
             chartDataCapital.Datasets.Add(createLineDataSetFromDoubleList("Gesamtvermögen", total, Color.LightSkyBlue));
 
+            //Vermögensaufteilung
             capitalDistrData = new ChartData
                 {
                     Labels = new List<string> { "Kontostand", "Sparkontostand", "Scalable", "Volksbank", "Bargeld", "Urlaubsgeld" },
@@ -127,6 +170,7 @@
 
             capitalDistrData.Datasets.Add(createDoughnutDataSetFromDoubleList(dist, colors));
 
+            //options
             chartOptions = new BarChartOptions
                 {
                     Responsive = true,
@@ -140,6 +184,11 @@
                 };
 
             capitalDistrobutionOptions = new DoughnutChartOptions
+                {
+                    Responsive = true
+                };
+
+            aboDistrobutionOptions = new DoughnutChartOptions
                 {
                     Responsive = true
                 };
@@ -164,6 +213,7 @@
                 await inOutChart.InitializeAsync(chartData, chartOptions);
                 await capitalChange.UpdateAsync(chartDataCapital, lineChartOptions);
                 await capitalDistrobution.InitializeAsync(capitalDistrData, capitalDistrobutionOptions);
+                await aboDistrobution.InitializeAsync(aboDistrData, aboDistrobutionOptions);
             }
             await base.OnAfterRenderAsync(firstRender);
         }
@@ -188,11 +238,17 @@
 
     private DoughnutChartDataset createDoughnutDataSetFromDoubleList(List<double> data, Color[] colors)
     {
+        List<string> colorsString = new List<string>();
+
+        foreach (Color color in colors)
+        {
+            colorsString.Add(color.ToRgbString());
+        }
+
         return new DoughnutChartDataset()
             {
                 Data = data,
-                BackgroundColor = new List<string> { colors[0].ToRgbString(), colors[1].ToRgbString(), colors[2].ToRgbString(),
-                colors[3].ToRgbString(), colors[4].ToRgbString(), colors[5].ToRgbString() },
+                BackgroundColor = colorsString
             };
     }
 

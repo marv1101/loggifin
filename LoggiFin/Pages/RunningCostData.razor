@@ -1,0 +1,179 @@
+﻿@page "/runningCostData"
+
+@using LoggiFin.DBO;
+@using LoggiFin.Data;
+@using System.Globalization;
+@using LoggiFin.Global;
+
+@inject NavigationManager uriHelper;
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+
+<h3>Daten zu laufenden Kosten</h3>
+
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="5000" Placement="ToastsPlacement.MiddleCenter" />
+
+<div>
+
+    <Grid @ref="grid"
+      TItem="Abokosten"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="AbokostenDataProvider"
+      AllowFiltering="true"
+      AllowSorting="true"
+      Responsive="true">
+
+    <GridColumn TItem="Abokosten" HeaderText="Id" PropertyName="rowId">
+        @context.aboID_PK
+    </GridColumn>
+    <GridColumn TItem="Abokosten" HeaderText="Titel" PropertyName="titel">
+        @context.titel
+    </GridColumn>
+    <GridColumn TItem="Abokosten " HeaderText="Gesamtkosten" PropertyName="totalCost">
+        @(context.kosten.ToString("C", CultureInfo.CreateSpecificCulture("de-DE")))
+    </GridColumn>
+    <GridColumn TItem="Abokosten" HeaderText="Geteilt" PropertyName="sharedCost">
+        @(context.geteilt.ToString("C", CultureInfo.CreateSpecificCulture("de-DE")))
+    </GridColumn>
+    <GridColumn TItem="Abokosten" HeaderText="Meine Kosten" PropertyName="myCost">
+        @((context.kosten - context.geteilt).ToString("C", CultureInfo.CreateSpecificCulture("de-DE")))
+    </GridColumn>
+    <GridColumn TItem="Abokosten" HeaderText="Aktiv Seit" PropertyName="since">
+        @context.aktivSeit
+    </GridColumn>
+
+    </Grid>
+
+</div>
+
+<div>
+
+    <label>Aktiv seit</label>
+    <DateInput TValue="DateTime" @bind-Value="@date" Placeholder="Enter Date" />
+    <label>Titel</label> <br />
+    <InputText @bind-Value="@titel" Placeholder="Titel" /><br />
+    <label>Gesamtkosten</label>
+    <CurrencyInput TValue="double" @bind-Value="@cost" Placeholder="Ausgaben" />
+    <label>Geteilt</label>
+    <CurrencyInput TValue="double" @bind-Value="@shared" Placeholder="Kontostand" />
+
+
+    <Button Color="ButtonColor.Success" Outline="true" @onclick="() => sendData()"> Daten senden </Button>
+</div>
+
+@code {
+
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    BlazorBootstrap.Grid<Abokosten> grid = default!;
+    private List<Abokosten> abokosten = default!;
+
+    DatabaseManager mngr = new DatabaseManager(GlobalProperties.debug); //schickt die Daten entweder an TestDB oder an Prod
+
+    DateTime date = DateTime.Now;
+    string titel = "";
+    double cost = 0;
+    double shared = 0;
+
+    bool loggedIn = false;
+
+    private async void sendData()
+    {
+        if (loggedIn)
+        {
+            if (titel.Replace(" ", "") != "")
+            {
+                mngr.insertAboKostenIntoDb(titel, cost, shared, date);
+
+                confirmSend();
+
+                await Task.Delay(2000);
+
+                uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+
+
+            }
+            else
+            {
+                denySend();
+            }
+        }
+        else
+        {
+            denySend();
+        }
+
+
+
+
+    }
+
+    private void confirmSend()
+    {
+        messages.Add(new ToastMessage(ToastType.Success, "Daten gesendet", $"{DateTime.Now}",
+        $"Daten wurden erfolgreich übermittelt!"));
+    }
+
+    private void denySend()
+    {
+        messages.Add(new ToastMessage(ToastType.Danger, "Daten wurden nicht gesendet gesendet", $"{DateTime.Now}",
+        $"Daten wurden nicht erfolgreich übermittelt! Bitte alles ausfüllen und anmelden"));
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await checkLogin();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !loggedIn)
+        {
+            uriHelper.NavigateTo("/login");
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task<GridDataProviderResult<Abokosten>> AbokostenDataProvider(GridDataProviderRequest<Abokosten> request)
+    {
+        if (loggedIn)
+        {
+            if (abokosten is null)
+            {
+                AbokostenService abokostenService = new AbokostenService();
+                abokosten = abokostenService.GetAbokosten();
+            }
+            return await Task.FromResult(request.ApplyTo(abokosten));
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+    private async Task checkLogin()
+    {
+        var token = "";
+        try
+        {
+            token = await sessionStorage.GetItemAsync<string>("LoggedIn");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+
+        if (token != null && token.Equals("true"))
+        {
+            loggedIn = true;
+        }
+        else
+        {
+            loggedIn = false;
+        }
+
+        StateHasChanged();
+    }
+}

@@ -173,5 +173,15 @@ namespace LoggiFin.Data
             return (List<Abokosten>)connection.QuerySql<Abokosten>("SELECT * FROM abokosten");
         }
 
+        public bool insertAboKostenIntoDb(string titel, double cost, double shared, DateTime date)
+        {
+            Console.WriteLine("INSERT INTO abokosten VALUES(DEFAULT, \"" + titel + "\"," + cost + ", " + shared + ", " + "'" + date.Year + "-" + date.Month + "-" + date.Day + "')");
+
+            int res = connection.ExecuteSql("INSERT INTO abokosten VALUES(DEFAULT, \"" + titel + "\","  + cost.ToString().Replace(",", ".") + ", " + shared.ToString().Replace(",", ".") + ", " + "'" + date.Year + "-" + date.Month + "-" + date.Day + "')");
+            if (res == 0) return false;
+
+            return true;
+        }
+
     }
 }

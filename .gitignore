@@ -76,3 +76,5 @@ msbuild.wrn
 /LoggiFinTests/obj/Debug/net7.0/ref/LoggiFinTests.dll
 /LoggiFinTests/obj/Debug/net7.0/refint/LoggiFinTests.dll
 /LoggiFin/obj/Debug/net7.0/LoggiFin.csproj.CoreCompileInputs.cache
+/LoggiFin/obj/Debug/net7.0/LoggiFin.GeneratedMSBuildEditorConfig.editorconfig
+/LoggiFin/LoggiFin.csproj.user

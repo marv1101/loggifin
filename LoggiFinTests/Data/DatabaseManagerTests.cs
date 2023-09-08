@@ -187,5 +187,22 @@ namespace LoggiFin.Data.Tests
             Assert.AreEqual(abo.aboID_PK, 1);
 
         }
+
+        [TestMethod()]
+        public void insertAboKostenIntoDbTest()
+        {
+            //given
+            DatabaseManager manager = new DatabaseManager(true);
+
+            Random rnd = new Random();
+            DateOnly date = DateOnly.FromDateTime(DateTime.Now);
+            double cost = rnd.NextDouble() * 50;
+            double shared = rnd.NextDouble() * 30;
+            double abonum = rnd.NextDouble() * 6000456;
+            //when
+            bool res = manager.insertAboKostenIntoDb("Testabo" + abonum, cost, shared, DateTime.Now);
+            //then
+            Assert.IsTrue(res);
+        }
     }
 }

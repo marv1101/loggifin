@@ -1,4 +1,5 @@
 ﻿@page "/fetchdata"
+@using LoggiFin.DBO;
 @using LoggiFin.Data;
 @using System.Globalization;
 @using LoggiFin.Global;
@@ -153,7 +154,7 @@
       RowClass="getRowClass">
 
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Id" PropertyName="rowId">
-        @context.rowId
+        <Tooltip Title="@getCommentString(context.rowId)">@context.rowId</Tooltip>
     </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Datum" PropertyName="date" SortString="Date" SortKeySelector="item => item.date" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
         @context.date
@@ -250,9 +251,9 @@
                 token = await sessionStorage.GetItemAsync<string>("LoggedIn");
             }catch(Exception ex)
             {
-                
+
             }
-            
+
 
             if (token != null && token.Equals("true"))
             {
@@ -264,6 +265,20 @@
             }
 
             StateHasChanged();
+        }
+
+        private string getCommentString(int datasetID)
+        {
+            List<Kommentar> res = mngr.getCommentsForDataset(datasetID);
+
+            String stringRes = "";
+
+            foreach (Kommentar com in res)
+            {
+                stringRes += com.kommentar + "; ";
+            }
+
+            return stringRes;
         }
 
 }

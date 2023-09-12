@@ -204,5 +204,31 @@ namespace LoggiFin.Data.Tests
             //then
             Assert.IsTrue(res);
         }
+
+        [TestMethod()]
+        public void getCommentsForDatasetTest()
+        {
+            //given
+            DatabaseManager manager = new DatabaseManager(true);
+
+            //when
+            List<Kommentar> res = manager.getCommentsForDataset(1);
+            //then
+            Assert.IsNotNull(res);
+            Assert.IsTrue(res.Count != 0);
+            Assert.AreNotEqual(res.First().kommentar, "");
+        }
+
+        [TestMethod()]
+        public void insertCommentForDatasetTest()
+        {
+            //given
+            DatabaseManager manager = new DatabaseManager(true);
+
+            //when
+            bool res = manager.insertCommentForDataset(1, "Testkommentar");
+            //then
+            Assert.IsTrue(res);
+        }
     }
 }

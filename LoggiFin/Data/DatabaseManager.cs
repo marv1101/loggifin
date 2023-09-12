@@ -4,6 +4,7 @@ using Insight.Database;
 using MySql.Data.MySqlClient;
 using System.Data.Common;
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Hosting;
 
 namespace LoggiFin.Data
 {
@@ -175,11 +176,23 @@ namespace LoggiFin.Data
 
         public bool insertAboKostenIntoDb(string titel, double cost, double shared, DateTime date)
         {
-            Console.WriteLine("INSERT INTO abokosten VALUES(DEFAULT, \"" + titel + "\"," + cost + ", " + shared + ", " + "'" + date.Year + "-" + date.Month + "-" + date.Day + "')");
-
             int res = connection.ExecuteSql("INSERT INTO abokosten VALUES(DEFAULT, \"" + titel + "\","  + cost.ToString().Replace(",", ".") + ", " + shared.ToString().Replace(",", ".") + ", " + "'" + date.Year + "-" + date.Month + "-" + date.Day + "')");
             if (res == 0) return false;
 
+            return true;
+        }
+
+        public List<Kommentar> getCommentsForDataset(int datasetID)
+        {
+            List<Kommentar> res = (List<Kommentar>)connection.QuerySql<Kommentar>("SELECT * FROM kommentare WHERE datasetID_FK = " + datasetID);
+
+            return res;
+        }
+
+        public bool insertCommentForDataset(int datasetID, string comment)
+        {
+            int res = connection.ExecuteSql("INSERT INTO kommentare VALUES (DEFAULT,'" + comment + "', " + datasetID + ")");
+            if (res == 0) return false;
             return true;
         }
 

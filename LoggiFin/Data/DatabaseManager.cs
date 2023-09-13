@@ -5,6 +5,7 @@ using MySql.Data.MySqlClient;
 using System.Data.Common;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Hosting;
+using System.Xml.Linq;
 
 namespace LoggiFin.Data
 {
@@ -191,8 +192,30 @@ namespace LoggiFin.Data
 
         public bool insertCommentForDataset(int datasetID, string comment)
         {
-            int res = connection.ExecuteSql("INSERT INTO kommentare VALUES (DEFAULT,'" + comment + "', " + datasetID + ")");
-            if (res == 0) return false;
+            try
+            {
+                int res = connection.ExecuteSql("INSERT INTO kommentare VALUES (DEFAULT,'" + comment + "', " + datasetID + ")");
+                if (res == 0) return false;
+            }catch(Exception ex)
+            {
+                return false;
+            }
+            
+            return true;
+        }
+
+        public bool deleteCommentForDataset(int kommentarID)
+        {
+            try
+            {
+                int res = connection.ExecuteSql("DELETE FROM kommentare WHERE kommentarID_PK = " + kommentarID);
+                if (res == 0) return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
             return true;
         }
 

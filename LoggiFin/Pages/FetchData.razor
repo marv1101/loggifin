@@ -1,4 +1,5 @@
 ﻿@page "/fetchdata"
+@using LoggiFin.DBO;
 @using LoggiFin.Data;
 @using System.Globalization;
 @using LoggiFin.Global;
@@ -42,15 +43,26 @@
         <CurrencyInput TValue="double" @bind-Value="@bargeld" Placeholder="Bargeld" />
         <label>Urlaubsgeld</label>
         <CurrencyInput TValue="double" @bind-Value="@urlaubskasse" Placeholder="Urlaubskasse" />
-        <br />
         <Button Color="ButtonColor.Success" Outline="true" @onclick="() => sendData()"> Daten senden </Button>
 
+        <br /><br />
+
+        <label>Datensatz ID</label>
+        <NumberInput TValue="int" @bind-Value="@datasetID" />
+        <label>Kommentar</label>
+        <InputText @bind-Value="@comment" />
+        <Button Color="ButtonColor.Success" Outline="true" @onclick="() => sendComment()"> Kommentar senden </Button>
+        
         <br /><br />
         <label>ID zum löschen</label>
         <NumberInput TValue="int" @bind-Value="@idToDelete" Placeholder="ID eingeben"  />
         <Button Color="ButtonColor.Danger" @onclick="deleteData"> Datenreihe löschen </Button>
+
+        <br /><br />
+        <label>ID zum löschen von Kommentar</label>
+        <NumberInput TValue="int" @bind-Value="@idCommentToDelete" Placeholder="ID eingeben" />
+        <Button Color="ButtonColor.Danger" @onclick="deleteComment"> Kommentar löschen </Button>
     </div>
-    <div class="mb-3">Entered date: @date1</div>
 
     @code {
         List<ToastMessage> messages = new List<ToastMessage>();
@@ -65,11 +77,14 @@
         private double bargeld = 0;
         private double urlaubskasse = 0;
         string descr = "";
+        int datasetID = -1;
+        string comment = "";
         DatabaseManager mngr = new DatabaseManager(GlobalProperties.debug); //schickt die Daten entweder an TestDB oder an Prod
         bool loggedIn = false;
 
         private ConfirmDialog dialog;
         int idToDelete = -1;
+        int idCommentToDelete = -1;
 
         private async void sendData()
         {
@@ -103,6 +118,27 @@
 
         }
 
+        private async void sendComment()
+        {
+            if (loggedIn)
+            {
+                if (comment.Replace(" ", "") != "")
+                {
+                    mngr.insertCommentForDataset(datasetID, comment);
+
+                    confirmSend();
+
+                    await Task.Delay(2000);
+
+                    uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+                }
+                else
+                {
+                    denySend();
+                }
+            }
+        }
+
         private async Task deleteData()
         {
             if (loggedIn)
@@ -126,6 +162,30 @@
                 }
             }
 
+        }
+
+        private async Task deleteComment()
+        {
+            if (loggedIn)
+            {
+                var confirmation = await dialog.ShowAsync(
+                title: "Wirklich löschen?",
+                message1: "Eintrag wird gelöscht. Aktion kann nicht rückgängig gemacht werden.",
+                message2: "Fortfahren?");
+
+                if (confirmation)
+                {
+                    mngr.deleteCommentForDataset(idCommentToDelete);
+
+                    await Task.Delay(2000);
+
+                    uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+                }
+                else
+                {
+
+                }
+            }
         }
 
         private void confirmSend()
@@ -153,7 +213,7 @@
       RowClass="getRowClass">
 
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Id" PropertyName="rowId">
-        @context.rowId
+        <Tooltip Title="@getCommentString(context.rowId)">@context.rowId</Tooltip>
     </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Datum" PropertyName="date" SortString="Date" SortKeySelector="item => item.date" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
         @context.date
@@ -250,9 +310,9 @@
                 token = await sessionStorage.GetItemAsync<string>("LoggedIn");
             }catch(Exception ex)
             {
-                
+
             }
-            
+
 
             if (token != null && token.Equals("true"))
             {
@@ -264,6 +324,20 @@
             }
 
             StateHasChanged();
+        }
+
+        private string getCommentString(int datasetID)
+        {
+            List<Kommentar> res = mngr.getCommentsForDataset(datasetID);
+
+            String stringRes = "";
+
+            foreach (Kommentar com in res)
+            {
+                stringRes += com.kommentarID_PK + "-" + com.kommentar + "; ";
+            }
+
+            return stringRes;
         }
 
 }

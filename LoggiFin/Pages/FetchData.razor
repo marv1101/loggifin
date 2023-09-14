@@ -237,7 +237,7 @@
         @context.volksbankSparplan.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Transfer" PropertyName="amountTotal" SortString="Transfer" SortKeySelector="item => item.amoutTotal">
-        @context.amoutTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+        <Tooltip Title="@FinLoggingDataService.getTransferText(@context.rowId)">@context.amoutTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))</Tooltip>
     </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Bargeld" PropertyName="bargeld" SortString="Bargeld" SortKeySelector="item => item.bargeld">
         @context.bargeld.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))

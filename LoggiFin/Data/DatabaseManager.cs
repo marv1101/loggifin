@@ -218,6 +218,5 @@ namespace LoggiFin.Data
 
             return true;
         }
-
     }
 }

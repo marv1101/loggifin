@@ -1,5 +1,6 @@
 ﻿using LoggiFin.DBO;
 using LoggiFin.Global;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LoggiFin.Data
 {
@@ -7,13 +8,16 @@ namespace LoggiFin.Data
     {
 
         private int rownum = -1;
-        DatabaseManager dbm;
+        private static DatabaseManager dbm;
         IEnumerable<FinLoggingDataRow> dataRows;
         List<Abokosten> abokosten;
 
         public FinLoggingDataService()
         {
-            dbm = new DatabaseManager(GlobalProperties.debug);
+            if(dbm == null)
+            {
+                dbm = new DatabaseManager(GlobalProperties.debug);
+            }
             List<Finanzdaten> finanzdaten = dbm.getData();
             abokosten = dbm.getAbokosten();
 
@@ -61,6 +65,31 @@ namespace LoggiFin.Data
         public List<Abokosten> GetAbokosten()
         {
             return this.abokosten;
+        }
+
+        public static string getTransferText(int datasetID)
+        {
+            string res = "";
+
+            if(dbm == null)
+            {
+                dbm = new DatabaseManager(GlobalProperties.debug);
+            }
+
+            List<Finanzdaten> finanzdaten = dbm.getData();
+
+            foreach (Finanzdaten fin in finanzdaten)
+            {
+
+                //transferdaten processing
+                if(fin.datasetID_PK == datasetID)
+                {
+                    int transferDatenID = fin.transferdatenID_FK;
+                    res += dbm.getTransferdaten(transferDatenID).beschreibung;
+                }
+            }
+
+            return res;
         }
 
     }

@@ -42,5 +42,16 @@ namespace LoggiFin.Data.Tests
 
             Trace.WriteLine(res.First().titel);
         }
+
+        [TestMethod()]
+        public void getTransferTextTest()
+        {
+            //given
+            //when
+            string res = FinLoggingDataService.getTransferText(1);
+            //then
+            Assert.IsNotNull(res);
+            Console.WriteLine(res);
+        }
     }
 }

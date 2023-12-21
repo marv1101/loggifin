@@ -20,6 +20,13 @@
 # and the Docker itself: https://opensource.com/resources/what-docker
 image: mcr.microsoft.com/dotnet/sdk:7.0
 
+stages:
+    - sonarqube-check
+    - sonarqube-vulnerability-report
+    - deploy
+    - test
+    - build
+
 # ### Define variables
 #
 variables:
@@ -120,10 +127,6 @@ deploy:
   stage: deploy
   script: echo "Define your deployment script!"
   environment: production
-
-stages:
-    - sonarqube-check
-    - sonarqube-vulnerability-report
 
 sonarqube-check:
   stage: sonarqube-check

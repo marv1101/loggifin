@@ -21,11 +21,11 @@
 image: mcr.microsoft.com/dotnet/sdk:7.0
 
 stages:
+    - test
+    - build
     - sonarqube-check
     - sonarqube-vulnerability-report
     - deploy
-    - test
-    - build
 
 # ### Define variables
 #

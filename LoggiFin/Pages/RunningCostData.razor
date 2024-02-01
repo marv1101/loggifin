@@ -75,6 +75,7 @@
     double shared = 0;
 
     bool loggedIn = false;
+    int uid = 0;
 
     private async void sendData()
     {
@@ -82,7 +83,7 @@
         {
             if (titel.Replace(" ", "") != "")
             {
-                mngr.insertAboKostenIntoDb(titel, cost, shared, date);
+                mngr.insertAboKostenIntoDb(uid, titel, cost, shared, date);
 
                 confirmSend();
 
@@ -122,26 +123,27 @@
     protected override async Task OnInitializedAsync()
     {
         await checkLogin();
+        if (!loggedIn)
+        {
+            uriHelper.NavigateTo("/login");
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && !loggedIn)
-        {
-            uriHelper.NavigateTo("/login");
-        }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task<GridDataProviderResult<Abokosten>> AbokostenDataProvider(GridDataProviderRequest<Abokosten> request)
     {
+        await checkLogin();
         if (loggedIn)
         {
             if (abokosten is null)
             {
                 AbokostenService abokostenService = new AbokostenService();
-                abokosten = abokostenService.GetAbokosten();
+                abokosten = abokostenService.GetAbokosten(uid);
             }
             return await Task.FromResult(request.ApplyTo(abokosten));
         }
@@ -155,9 +157,11 @@
     private async Task checkLogin()
     {
         var token = "";
+        int userId = -1;
         try
         {
             token = await sessionStorage.GetItemAsync<string>("LoggedIn");
+            userId = await sessionStorage.GetItemAsync<int>("uid");
         }
         catch (Exception ex)
         {
@@ -168,6 +172,7 @@
         if (token != null && token.Equals("true"))
         {
             loggedIn = true;
+            uid = userId;
         }
         else
         {

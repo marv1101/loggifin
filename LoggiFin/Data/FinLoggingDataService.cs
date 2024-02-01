@@ -1,6 +1,6 @@
 ﻿using LoggiFin.DBO;
 using LoggiFin.Global;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Net.NetworkInformation;
 
 namespace LoggiFin.Data
 {
@@ -12,14 +12,14 @@ namespace LoggiFin.Data
         IEnumerable<FinLoggingDataRow> dataRows;
         List<Abokosten> abokosten;
 
-        public FinLoggingDataService()
+        public FinLoggingDataService(int uid)
         {
             if(dbm == null)
             {
                 dbm = new DatabaseManager(GlobalProperties.debug);
             }
             List<Finanzdaten> finanzdaten = dbm.getData();
-            abokosten = dbm.getAbokosten();
+            abokosten = dbm.getAbokosten(uid);
 
             List<FinLoggingDataRow> data = new List<FinLoggingDataRow>();
             Kontodaten kdt;

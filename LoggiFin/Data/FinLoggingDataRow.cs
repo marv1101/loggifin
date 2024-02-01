@@ -49,5 +49,10 @@ namespace LoggiFin.Data
             this.totalBalance = kontostand + sparkontostand + volksbankSparplan + scalableSparplan + bargeld + urlaubskasse;
         }
 
+        public string getProfitsAsEuro()
+        {
+            return Math.Round((this.einnahmen - this.ausgaben), 2) + "€";
+        }
+
     }
 }

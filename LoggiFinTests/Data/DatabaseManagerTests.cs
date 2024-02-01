@@ -158,6 +158,21 @@ namespace LoggiFin.Data.Tests
         }
 
         [TestMethod()]
+        public void getUserIdByNameTest()
+        {
+            //given
+            DatabaseManager manager = new DatabaseManager(true);
+
+            //when
+            int res = manager.getUserIdByName("testuser", "test");
+            int res2 = manager.getUserIdByName("testuser1", "test");
+
+            //then
+            Assert.AreEqual(1, res);
+            Assert.IsFalse(res2 >= 0);
+        }
+
+        [TestMethod()]
         public void removeDataTest()
         {
             //given
@@ -177,7 +192,7 @@ namespace LoggiFin.Data.Tests
             //given
             DatabaseManager manager = new DatabaseManager(true);
             //when
-            List<Abokosten> abokosten = manager.getAbokosten();
+            List<Abokosten> abokosten = manager.getAbokosten(1);
             Abokosten abo = abokosten.First();
             //then
             Assert.IsNotNull(abokosten);
@@ -200,7 +215,7 @@ namespace LoggiFin.Data.Tests
             double shared = rnd.NextDouble() * 30;
             double abonum = rnd.NextDouble() * 6000456;
             //when
-            bool res = manager.insertAboKostenIntoDb("Testabo" + abonum, cost, shared, DateTime.Now);
+            bool res = manager.insertAboKostenIntoDb(1, "Testabo" + abonum, cost, shared, DateTime.Now);
             //then
             Assert.IsTrue(res);
         }

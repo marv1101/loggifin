@@ -81,7 +81,9 @@
 
     private DateOnly doughnutChartSelectedDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
 
-    FinLoggingDataService finLoggingDataService = new FinLoggingDataService();
+    private static int uid = -1;
+
+    FinLoggingDataService finLoggingDataService = new FinLoggingDataService(uid);
 
     Random rand = new Random();
 
@@ -192,10 +194,18 @@
                 {
                     Responsive = true
                 };
+
+            await GetDimensions();
+            await inOutChart.InitializeAsync(chartData, chartOptions);
+            await capitalChange.UpdateAsync(chartDataCapital, lineChartOptions);
+            await capitalDistrobution.InitializeAsync(capitalDistrData, capitalDistrobutionOptions);
+            await aboDistrobution.InitializeAsync(aboDistrData, aboDistrobutionOptions);
+            await aboDistrobution.UpdateAsync(aboDistrData, aboDistrobutionOptions);
+
         }
         else
         {
-
+            uriHelper.NavigateTo("/login");
         }
 
 
@@ -204,23 +214,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (loggedIn)
-        {
-            await GetDimensions();
-
-            if (firstRender)
-            {
-                await inOutChart.InitializeAsync(chartData, chartOptions);
-                await capitalChange.UpdateAsync(chartDataCapital, lineChartOptions);
-                await capitalDistrobution.InitializeAsync(capitalDistrData, capitalDistrobutionOptions);
-                await aboDistrobution.InitializeAsync(aboDistrData, aboDistrobutionOptions);
-            }
-            await base.OnAfterRenderAsync(firstRender);
-        }
-        else
-        {
-            uriHelper.NavigateTo("/login");
-        }
+        await base.OnAfterRenderAsync(firstRender);
 
     }
 
@@ -281,7 +275,7 @@
     //change von Doughnutchart Date
     private async void DateChanged(DateOnly newDate)
     {
-        
+        await checkLogin();
         if (loggedIn)
         {
             data = finLoggingDataService.GetDataRows();
@@ -318,19 +312,22 @@
     private async Task checkLogin()
     {
         var token = "";
+        int userId = -1;
         try
         {
             token = await sessionStorage.GetItemAsync<string>("LoggedIn");
+            userId = await sessionStorage.GetItemAsync<int>("uid");
         }
         catch (Exception ex)
         {
-
+            Console.WriteLine(ex.Message);
         }
 
 
         if (token != null && token.Equals("true"))
         {
             loggedIn = true;
+            uid = userId;
         }
         else
         {

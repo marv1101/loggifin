@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Hosting;
 using System.Xml.Linq;
+using Org.BouncyCastle.Utilities.Collections;
 
 namespace LoggiFin.Data
 {
@@ -124,6 +125,28 @@ namespace LoggiFin.Data
             return false;
         }
 
+        public int getUserIdByName(string username, string password)
+        {
+            bool authed = authUser(username, password);
+
+            if (authed)
+            {
+                try
+                {
+                    return (connection.QuerySql<int>("SELECT userID_PK FROM users WHERE username='" + username + "'").First());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return -1;
+                }
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
         public bool removeData(int datasetID_PK)
         {
 
@@ -170,14 +193,14 @@ namespace LoggiFin.Data
             
         }
 
-        public List<Abokosten> getAbokosten()
+        public List<Abokosten> getAbokosten(int userId)
         {
-            return (List<Abokosten>)connection.QuerySql<Abokosten>("SELECT * FROM abokosten");
+            return (List<Abokosten>)connection.QuerySql<Abokosten>("SELECT * FROM abokosten WHERE userID_FK = " + userId);
         }
 
-        public bool insertAboKostenIntoDb(string titel, double cost, double shared, DateTime date)
+        public bool insertAboKostenIntoDb(int uid, string titel, double cost, double shared, DateTime date)
         {
-            int res = connection.ExecuteSql("INSERT INTO abokosten VALUES(DEFAULT, \"" + titel + "\","  + cost.ToString().Replace(",", ".") + ", " + shared.ToString().Replace(",", ".") + ", " + "'" + date.Year + "-" + date.Month + "-" + date.Day + "')");
+            int res = connection.ExecuteSql("INSERT INTO abokosten VALUES(DEFAULT," + uid + ", \"" + titel + "\","  + cost.ToString().Replace(",", ".") + ", " + shared.ToString().Replace(",", ".") + ", " + "'" + date.Year + "-" + date.Month + "-" + date.Day + "')");
             if (res == 0) return false;
 
             return true;

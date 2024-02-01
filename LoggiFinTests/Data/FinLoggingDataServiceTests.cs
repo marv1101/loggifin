@@ -17,7 +17,7 @@ namespace LoggiFin.Data.Tests
         public void FinLoggingDataServiceTest()
         {
             //given
-            FinLoggingDataService loggingDataService = new FinLoggingDataService();
+            FinLoggingDataService loggingDataService = new FinLoggingDataService(1);
             //when
             IEnumerable<FinLoggingDataRow> res = loggingDataService.GetDataRows();
             //then
@@ -32,7 +32,7 @@ namespace LoggiFin.Data.Tests
         public void GetAbokostenTest()
         {
             //given
-            FinLoggingDataService loggingDataService = new FinLoggingDataService();
+            FinLoggingDataService loggingDataService = new FinLoggingDataService(1);
             //when
             List<Abokosten> res = loggingDataService.GetAbokosten();
             //then

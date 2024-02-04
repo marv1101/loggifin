@@ -78,3 +78,10 @@ msbuild.wrn
 /LoggiFin/obj/Debug/net7.0/LoggiFin.csproj.CoreCompileInputs.cache
 /LoggiFin/obj/Debug/net7.0/LoggiFin.GeneratedMSBuildEditorConfig.editorconfig
 /LoggiFin/LoggiFin.csproj.user
+*.json
+/LoggiFin/obj/Debug/net7.0/LoggiFin.AssemblyInfoInputs.cache
+/LoggiFin/obj/Debug/net7.0/LoggiFin.assets.cache
+/LoggiFin/obj/Debug/net7.0/LoggiFin.RazorAssemblyInfo.cache
+/LoggiFinTests/obj/Debug/net7.0/LoggiFinTests.AssemblyInfoInputs.cache
+/LoggiFinTests/obj/Debug/net7.0/LoggiFinTests.assets.cache
+/LoggiFinTests/obj/Debug/net7.0/LoggiFinTests.GeneratedMSBuildEditorConfig.editorconfig

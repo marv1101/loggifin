@@ -33,6 +33,12 @@
     private string username = "guest";
     private string password = "";
 
+     /*
+     * 
+     * this function is used to login a user. It retrieves the username and password from the loging form an checks it against the Users in the Database.
+     * If the user exists and the passwords match, the sessionStorage token LoggedIn will be set to true.
+     * 
+    */
     private async Task Login()
     {
         bool res = dbm.authUser(username, password);
@@ -48,9 +54,10 @@
 
 
             //var name = await sessionStorage.GetItemAsync<string>("name");
-            
-            
+
             await sessionStorage.SetItemAsync("LoggedIn", "true");
+            await sessionStorage.SetItemAsync("UserName", username);
+            await sessionStorage.SetItemAsync("uid", dbm.getUserIdByName(username, password));
             
         }
         else
@@ -63,6 +70,8 @@
                 });
 
             await sessionStorage.SetItemAsync("LoggedIn", "false");
+            await sessionStorage.SetItemAsync("UserName", "");
+            await sessionStorage.SetItemAsync("uid", 0);
         }
     }
 

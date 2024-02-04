@@ -81,7 +81,9 @@
 
     private DateOnly doughnutChartSelectedDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
 
-    FinLoggingDataService finLoggingDataService = new FinLoggingDataService();
+    private static int uid = -1;
+
+    FinLoggingDataService finLoggingDataService;
 
     Random rand = new Random();
 
@@ -165,7 +167,14 @@
                     Datasets = new List<IChartDataset>()
                 };
 
-            List<double> dist = new List<double> { kontostand.Last(), sparkontostand.Last(), scalable.Last(), volksbank.Last(), bargeld.Last(), urlaubskasse.Last() };
+            List<double> dist;
+            try
+            {
+                dist = new List<double> { kontostand.Last(), sparkontostand.Last(), scalable.Last(), volksbank.Last(), bargeld.Last(), urlaubskasse.Last() };
+            }catch(Exception e)
+            {
+                dist = new List<double>();
+            }
             Color[] colors = { Color.Coral, Color.Aqua, Color.DarkOliveGreen, Color.DarkSalmon, Color.Firebrick, Color.RebeccaPurple };
 
             capitalDistrData.Datasets.Add(createDoughnutDataSetFromDoubleList(dist, colors));
@@ -192,10 +201,18 @@
                 {
                     Responsive = true
                 };
+
+            await GetDimensions();
+            await inOutChart.InitializeAsync(chartData, chartOptions);
+            await capitalChange.UpdateAsync(chartDataCapital, lineChartOptions);
+            await capitalDistrobution.InitializeAsync(capitalDistrData, capitalDistrobutionOptions);
+            await aboDistrobution.InitializeAsync(aboDistrData, aboDistrobutionOptions);
+            await aboDistrobution.UpdateAsync(aboDistrData, aboDistrobutionOptions);
+
         }
         else
         {
-
+            uriHelper.NavigateTo("/login");
         }
 
 
@@ -204,23 +221,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (loggedIn)
-        {
-            await GetDimensions();
-
-            if (firstRender)
-            {
-                await inOutChart.InitializeAsync(chartData, chartOptions);
-                await capitalChange.UpdateAsync(chartDataCapital, lineChartOptions);
-                await capitalDistrobution.InitializeAsync(capitalDistrData, capitalDistrobutionOptions);
-                await aboDistrobution.InitializeAsync(aboDistrData, aboDistrobutionOptions);
-            }
-            await base.OnAfterRenderAsync(firstRender);
-        }
-        else
-        {
-            uriHelper.NavigateTo("/login");
-        }
+        await base.OnAfterRenderAsync(firstRender);
 
     }
 
@@ -281,8 +282,8 @@
     //change von Doughnutchart Date
     private async void DateChanged(DateOnly newDate)
     {
-        
-        if (loggedIn)
+        await checkLogin();
+        if (loggedIn && capitalDistrData != null)
         {
             data = finLoggingDataService.GetDataRows();
             List<double> dist = new List<double>();
@@ -310,7 +311,7 @@
 
                 doughnutChartSelectedDate = newDate;
             }
-            
+
         }
 
     }
@@ -318,19 +319,23 @@
     private async Task checkLogin()
     {
         var token = "";
+        int userId = -1;
         try
         {
             token = await sessionStorage.GetItemAsync<string>("LoggedIn");
+            userId = await sessionStorage.GetItemAsync<int>("uid");
         }
         catch (Exception ex)
         {
-
+            Console.WriteLine(ex.Message);
         }
 
 
         if (token != null && token.Equals("true"))
         {
             loggedIn = true;
+            uid = userId;
+            finLoggingDataService = new FinLoggingDataService(uid);
         }
         else
         {

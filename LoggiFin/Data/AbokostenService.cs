@@ -8,9 +8,9 @@ namespace LoggiFin.Data
 
         private DatabaseManager manager = new DatabaseManager(GlobalProperties.debug);
 
-        public List<Abokosten> GetAbokosten()
+        public List<Abokosten> GetAbokosten(int uid)
         {
-            return manager.getAbokosten();
+            return manager.getAbokosten(uid);
         }
 
     }

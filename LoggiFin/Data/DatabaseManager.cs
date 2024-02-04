@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Hosting;
 using System.Xml.Linq;
+using Org.BouncyCastle.Utilities.Collections;
 
 namespace LoggiFin.Data
 {
@@ -36,37 +37,37 @@ namespace LoggiFin.Data
             connection = db.Connection();
         }
 
-        public List<Finanzdaten> getData()
+        public List<Finanzdaten> getData(int uid)
         {
-            List<Finanzdaten> res = (List<Finanzdaten>) connection.QuerySql<Finanzdaten>("SELECT * FROM finanzdaten ORDER BY entryDate ASC");
+            List<Finanzdaten> res = (List<Finanzdaten>) connection.QuerySql<Finanzdaten>("SELECT * FROM finanzdaten WHERE userID_FK = " + uid + " ORDER BY entryDate ASC");
 
             return res;
         }
 
-        public Kontodaten getKontodaten(int kontodatenID_FK)
+        public Kontodaten getKontodaten(int kontodatenID_FK, int userID_FK)
         {
-            Kontodaten res = ((List<Kontodaten>)connection.QuerySql<Kontodaten>("SELECT * FROM kontodaten WHERE kontodatenID_PK = " + kontodatenID_FK)).First();
+            Kontodaten res = ((List<Kontodaten>)connection.QuerySql<Kontodaten>("SELECT * FROM kontodaten WHERE kontodatenID_PK = " + kontodatenID_FK + " AND userID_FK = " + userID_FK)).First();
 
             return res;
         }
 
-        public Investmentdaten getInvestdaten(int investdatenID_PK)
+        public Investmentdaten getInvestdaten(int investdatenID_PK, int userID_FK)
         {
-            Investmentdaten res = ((List<Investmentdaten>)connection.QuerySql<Investmentdaten>("SELECT * FROM investmentdaten WHERE investdatenID_PK = " + investdatenID_PK)).First();
+            Investmentdaten res = ((List<Investmentdaten>)connection.QuerySql<Investmentdaten>("SELECT * FROM investmentdaten WHERE investdatenID_PK = " + investdatenID_PK + " AND userID_FK = " + userID_FK)).First();
 
             return res;
         }
 
-        public Transferdaten getTransferdaten(int transferdatenID_PK)
+        public Transferdaten getTransferdaten(int transferdatenID_PK, int userID_FK)
         {
-            Transferdaten res = ((List<Transferdaten>)connection.QuerySql<Transferdaten>("SELECT * FROM transferdaten WHERE transferdatenID_PK = " + transferdatenID_PK)).First();
+            Transferdaten res = ((List<Transferdaten>)connection.QuerySql<Transferdaten>("SELECT * FROM transferdaten WHERE transferdatenID_PK = " + transferdatenID_PK + " AND userID_FK = " + userID_FK)).First();
 
             return res;
         }
 
-        public Bargelddaten getBargelddaten(int bargelddatenID_PK)
+        public Bargelddaten getBargelddaten(int bargelddatenID_PK, int userID_FK)
         {
-            Bargelddaten res = ((List<Bargelddaten>)connection.QuerySql<Bargelddaten>("SELECT * FROM bargelddaten WHERE bargelddatenID_PK = " + bargelddatenID_PK)).First();
+            Bargelddaten res = ((List<Bargelddaten>)connection.QuerySql<Bargelddaten>("SELECT * FROM bargelddaten WHERE bargelddatenID_PK = " + bargelddatenID_PK + " AND userID_FK = " + userID_FK)).First();
 
             return res;
         }
@@ -83,24 +84,24 @@ namespace LoggiFin.Data
             return res;
         }
 
-        public bool insertDataIntoDb(DateOnly date, double einnahmen, double ausgaben, double kontostand, double sparkonto,
+        public bool insertDataIntoDb(int uid, DateOnly date, double einnahmen, double ausgaben, double kontostand, double sparkonto,
             double scalableSparplan, double volksbankSparplan, string beschreibung, double totalAmount, double bargeld, double urlaubskasse)
         {
 
-            int res = connection.ExecuteSql("INSERT INTO investmentdaten VALUES(DEFAULT, " + volksbankSparplan.ToString().Replace(",", ".") + ", " + scalableSparplan.ToString().Replace(",", ".") + ")");
+            int res = connection.ExecuteSql("INSERT INTO investmentdaten VALUES(DEFAULT, " + uid + ", " + volksbankSparplan.ToString().Replace(",", ".") + ", " + scalableSparplan.ToString().Replace(",", ".") + ")");
             if (res == 0) return false;
 
-            res = connection.ExecuteSql("INSERT INTO kontodaten VALUES(DEFAULT, " + einnahmen.ToString().Replace(",", ".") + ", " + ausgaben.ToString().Replace(",", ".") + ", " + kontostand.ToString().Replace(",", ".") + ", " + sparkonto.ToString().Replace(",", ".") + ")");
+            res = connection.ExecuteSql("INSERT INTO kontodaten VALUES(DEFAULT, " + uid + ", " + einnahmen.ToString().Replace(",", ".") + ", " + ausgaben.ToString().Replace(",", ".") + ", " + kontostand.ToString().Replace(",", ".") + ", " + sparkonto.ToString().Replace(",", ".") + ")");
             if (res == 0) return false;
 
-            res = connection.ExecuteSql("INSERT INTO transferdaten VALUES(DEFAULT, \"" + beschreibung.ToString().Replace(",", ".") + "\", " + totalAmount.ToString().Replace(",", ".") + ")");
+            res = connection.ExecuteSql("INSERT INTO transferdaten VALUES(DEFAULT, " + uid + ", \"" + beschreibung.ToString().Replace(",", ".") + "\", " + totalAmount.ToString().Replace(",", ".") + ")");
             if (res == 0) return false;
 
-            res = connection.ExecuteSql("INSERT INTO bargelddaten VALUES(DEFAULT, " + bargeld.ToString().Replace(",", ".") + ", " + urlaubskasse.ToString().Replace(",", ".") + ")");
+            res = connection.ExecuteSql("INSERT INTO bargelddaten VALUES(DEFAULT, " + uid + ", " + bargeld.ToString().Replace(",", ".") + ", " + urlaubskasse.ToString().Replace(",", ".") + ")");
             if (res == 0) return false;
 
             lastIndic = getLastIndices();
-            res = connection.ExecuteSql("INSERT INTO finanzdaten VALUES(DEFAULT, '" + date.Year + "-" + date.Month + "-" + date.Day + "', " + lastIndic[0] + ", " + lastIndic[1] + ", " + lastIndic[2] + ", " + lastIndic[3] + ")");
+            res = connection.ExecuteSql("INSERT INTO finanzdaten VALUES(DEFAULT, '" + date.Year + "-" + date.Month + "-" + date.Day + "', " + uid + ", " + lastIndic[0] + ", " + lastIndic[1] + ", " + lastIndic[2] + ", " + lastIndic[3] + ")");
             if (res == 0) return false;
 
             return true;
@@ -122,6 +123,28 @@ namespace LoggiFin.Data
             if (password.Equals(pwd)) return true;
 
             return false;
+        }
+
+        public int getUserIdByName(string username, string password)
+        {
+            bool authed = authUser(username, password);
+
+            if (authed)
+            {
+                try
+                {
+                    return (connection.QuerySql<int>("SELECT userID_PK FROM users WHERE username='" + username + "'").First());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return -1;
+                }
+            }
+            else
+            {
+                return -1;
+            }
         }
 
         public bool removeData(int datasetID_PK)
@@ -170,14 +193,14 @@ namespace LoggiFin.Data
             
         }
 
-        public List<Abokosten> getAbokosten()
+        public List<Abokosten> getAbokosten(int userId)
         {
-            return (List<Abokosten>)connection.QuerySql<Abokosten>("SELECT * FROM abokosten");
+            return (List<Abokosten>)connection.QuerySql<Abokosten>("SELECT * FROM abokosten WHERE userID_FK = " + userId);
         }
 
-        public bool insertAboKostenIntoDb(string titel, double cost, double shared, DateTime date)
+        public bool insertAboKostenIntoDb(int uid, string titel, double cost, double shared, DateTime date)
         {
-            int res = connection.ExecuteSql("INSERT INTO abokosten VALUES(DEFAULT, \"" + titel + "\","  + cost.ToString().Replace(",", ".") + ", " + shared.ToString().Replace(",", ".") + ", " + "'" + date.Year + "-" + date.Month + "-" + date.Day + "')");
+            int res = connection.ExecuteSql("INSERT INTO abokosten VALUES(DEFAULT," + uid + ", \"" + titel + "\","  + cost.ToString().Replace(",", ".") + ", " + shared.ToString().Replace(",", ".") + ", " + "'" + date.Year + "-" + date.Month + "-" + date.Day + "')");
             if (res == 0) return false;
 
             return true;

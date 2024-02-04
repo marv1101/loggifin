@@ -24,7 +24,7 @@ namespace LoggiFin.Data.Tests
             DatabaseManager manager = new DatabaseManager(true);
 
             //when
-            List<Finanzdaten> res = manager.getData();
+            List<Finanzdaten> res = manager.getData(1);
             Finanzdaten fstElem = res.Last();
 
             //then
@@ -49,7 +49,7 @@ namespace LoggiFin.Data.Tests
 
             //when
             int kontodatenID_PK = 1;
-            Kontodaten res = manager.getKontodaten(kontodatenID_PK);
+            Kontodaten res = manager.getKontodaten(kontodatenID_PK, 1);
 
             //then
             Assert.IsTrue(res != null);
@@ -68,7 +68,7 @@ namespace LoggiFin.Data.Tests
 
             //when
             int investdatenID_PK = 1;
-            Investmentdaten res = manager.getInvestdaten(investdatenID_PK);
+            Investmentdaten res = manager.getInvestdaten(investdatenID_PK, 1);
 
             //then
             Assert.IsTrue(res != null);
@@ -87,7 +87,7 @@ namespace LoggiFin.Data.Tests
 
             //when
             int transferdatenID_PK = 1;
-            Transferdaten res = manager.getTransferdaten(transferdatenID_PK);
+            Transferdaten res = manager.getTransferdaten(transferdatenID_PK, 1);
 
             //then
             Assert.IsTrue(res != null);
@@ -106,7 +106,7 @@ namespace LoggiFin.Data.Tests
 
             //when
             int bargelddatenID_PK = 1;
-            Bargelddaten res = manager.getBargelddaten(bargelddatenID_PK);
+            Bargelddaten res = manager.getBargelddaten(bargelddatenID_PK, 1);
 
             //then
             Assert.IsTrue(res != null);
@@ -136,7 +136,7 @@ namespace LoggiFin.Data.Tests
             double bargeld = rnd.NextDouble() * 500;
             double urlaubskasse = rnd.NextDouble() * 1000;
             //when
-            bool res = manager.insertDataIntoDb(date, einnahmen, ausgaben, kontostand,
+            bool res = manager.insertDataIntoDb(1, date, einnahmen, ausgaben, kontostand,
                 sparkontostand, scalable, volksbank, transf, transfAmount, bargeld, urlaubskasse);
             //then
             Assert.IsTrue(res);

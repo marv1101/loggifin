@@ -83,7 +83,7 @@
 
     private static int uid = -1;
 
-    FinLoggingDataService finLoggingDataService = new FinLoggingDataService(uid);
+    FinLoggingDataService finLoggingDataService;
 
     Random rand = new Random();
 
@@ -167,7 +167,14 @@
                     Datasets = new List<IChartDataset>()
                 };
 
-            List<double> dist = new List<double> { kontostand.Last(), sparkontostand.Last(), scalable.Last(), volksbank.Last(), bargeld.Last(), urlaubskasse.Last() };
+            List<double> dist;
+            try
+            {
+                dist = new List<double> { kontostand.Last(), sparkontostand.Last(), scalable.Last(), volksbank.Last(), bargeld.Last(), urlaubskasse.Last() };
+            }catch(Exception e)
+            {
+                dist = new List<double>();
+            }
             Color[] colors = { Color.Coral, Color.Aqua, Color.DarkOliveGreen, Color.DarkSalmon, Color.Firebrick, Color.RebeccaPurple };
 
             capitalDistrData.Datasets.Add(createDoughnutDataSetFromDoubleList(dist, colors));
@@ -276,7 +283,7 @@
     private async void DateChanged(DateOnly newDate)
     {
         await checkLogin();
-        if (loggedIn)
+        if (loggedIn && capitalDistrData != null)
         {
             data = finLoggingDataService.GetDataRows();
             List<double> dist = new List<double>();
@@ -304,7 +311,7 @@
 
                 doughnutChartSelectedDate = newDate;
             }
-            
+
         }
 
     }
@@ -328,6 +335,7 @@
         {
             loggedIn = true;
             uid = userId;
+            finLoggingDataService = new FinLoggingDataService(uid);
         }
         else
         {

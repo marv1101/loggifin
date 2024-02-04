@@ -48,7 +48,7 @@ namespace LoggiFin.Data.Tests
         {
             //given
             //when
-            string res = FinLoggingDataService.getTransferText(1);
+            string res = FinLoggingDataService.getTransferText(1, 1);
             //then
             Assert.IsNotNull(res);
             Console.WriteLine(res);

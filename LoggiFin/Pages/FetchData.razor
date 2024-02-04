@@ -93,7 +93,7 @@
             {
                 if (descr.Replace(" ", "") != "")
                 {
-                    mngr.insertDataIntoDb(date1, einnahmen, ausgaben, kontostand, sparkonto,
+                    mngr.insertDataIntoDb(uid, date1, einnahmen, ausgaben, kontostand, sparkonto,
                     scalableSparplan, volksbankSparplan, descr, transfer, bargeld, urlaubskasse);
 
                     confirmSend();
@@ -238,7 +238,7 @@
         @context.volksbankSparplan.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Transfer" PropertyName="amountTotal" SortString="Transfer" SortKeySelector="item => item.amoutTotal">
-        <Tooltip Title="@FinLoggingDataService.getTransferText(@context.rowId)">@context.amoutTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))</Tooltip>
+        <Tooltip Title="@FinLoggingDataService.getTransferText(@context.rowId, uid)">@context.amoutTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))</Tooltip>
     </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Bargeld" PropertyName="bargeld" SortString="Bargeld" SortKeySelector="item => item.bargeld">
         @context.bargeld.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))

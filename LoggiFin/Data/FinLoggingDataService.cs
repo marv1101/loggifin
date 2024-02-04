@@ -1,6 +1,6 @@
 ﻿using LoggiFin.DBO;
 using LoggiFin.Global;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Net.NetworkInformation;
 
 namespace LoggiFin.Data
 {
@@ -12,14 +12,14 @@ namespace LoggiFin.Data
         IEnumerable<FinLoggingDataRow> dataRows;
         List<Abokosten> abokosten;
 
-        public FinLoggingDataService()
+        public FinLoggingDataService(int uid)
         {
             if(dbm == null)
             {
                 dbm = new DatabaseManager(GlobalProperties.debug);
             }
-            List<Finanzdaten> finanzdaten = dbm.getData();
-            abokosten = dbm.getAbokosten();
+            List<Finanzdaten> finanzdaten = dbm.getData(uid);
+            abokosten = dbm.getAbokosten(uid);
 
             List<FinLoggingDataRow> data = new List<FinLoggingDataRow>();
             Kontodaten kdt;
@@ -36,19 +36,19 @@ namespace LoggiFin.Data
                 //to process
                 int kontodatenID = fin.kontodatenID_FK;
                 //kontodaten processing
-                kdt = dbm.getKontodaten(kontodatenID);
+                kdt = dbm.getKontodaten(kontodatenID, uid);
 
                 //investdaten processing
                 int investDatenID = fin.investdatenID_FK;
-                idt = dbm.getInvestdaten(investDatenID);
+                idt = dbm.getInvestdaten(investDatenID, uid);
 
                 //transferdaten processing
                 int transferDatenID = fin.transferdatenID_FK;
-                tdt = dbm.getTransferdaten(transferDatenID);
+                tdt = dbm.getTransferdaten(transferDatenID, uid);
 
                 //bargelddaten processing
                 int bargeldDatenID = fin.bargelddatenID_FK;
-                bdt = dbm.getBargelddaten(bargeldDatenID);
+                bdt = dbm.getBargelddaten(bargeldDatenID, uid);
 
                 data.Add(new FinLoggingDataRow(id, date, kdt, idt, tdt, bdt));
 
@@ -67,7 +67,7 @@ namespace LoggiFin.Data
             return this.abokosten;
         }
 
-        public static string getTransferText(int datasetID)
+        public static string getTransferText(int datasetID, int userID_FK)
         {
             string res = "";
 
@@ -76,7 +76,7 @@ namespace LoggiFin.Data
                 dbm = new DatabaseManager(GlobalProperties.debug);
             }
 
-            List<Finanzdaten> finanzdaten = dbm.getData();
+            List<Finanzdaten> finanzdaten = dbm.getData(userID_FK);
 
             foreach (Finanzdaten fin in finanzdaten)
             {
@@ -85,7 +85,7 @@ namespace LoggiFin.Data
                 if(fin.datasetID_PK == datasetID)
                 {
                     int transferDatenID = fin.transferdatenID_FK;
-                    res += dbm.getTransferdaten(transferDatenID).beschreibung;
+                    res += dbm.getTransferdaten(transferDatenID, userID_FK).beschreibung;
                 }
             }
 

@@ -81,6 +81,7 @@
         string comment = "";
         DatabaseManager mngr = new DatabaseManager(GlobalProperties.debug); //schickt die Daten entweder an TestDB oder an Prod
         bool loggedIn = false;
+        int uid = -1;
 
         private ConfirmDialog dialog;
         int idToDelete = -1;
@@ -92,7 +93,7 @@
             {
                 if (descr.Replace(" ", "") != "")
                 {
-                    mngr.insertDataIntoDb(date1, einnahmen, ausgaben, kontostand, sparkonto,
+                    mngr.insertDataIntoDb(uid, date1, einnahmen, ausgaben, kontostand, sparkonto,
                     scalableSparplan, volksbankSparplan, descr, transfer, bargeld, urlaubskasse);
 
                     confirmSend();
@@ -216,7 +217,7 @@
         <Tooltip Title="@getCommentString(context.rowId)">@context.rowId</Tooltip>
     </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Datum" PropertyName="date" SortString="Date" SortKeySelector="item => item.date" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
-        @context.date
+        <Tooltip Title="@context.getProfitsAsEuro()">@context.date</Tooltip>
     </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Einnahmen" PropertyName="einnahmen" SortString="Einnahmen" SortKeySelector="item => item.einnahmen">
         @context.einnahmen.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
@@ -237,7 +238,7 @@
         @context.volksbankSparplan.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Transfer" PropertyName="amountTotal" SortString="Transfer" SortKeySelector="item => item.amoutTotal">
-        <Tooltip Title="@FinLoggingDataService.getTransferText(@context.rowId)">@context.amoutTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))</Tooltip>
+        <Tooltip Title="@FinLoggingDataService.getTransferText(@context.rowId, uid)">@context.amoutTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))</Tooltip>
     </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Bargeld" PropertyName="bargeld" SortString="Bargeld" SortKeySelector="item => item.bargeld">
         @context.bargeld.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
@@ -258,25 +259,26 @@
         protected override async Task OnInitializedAsync()
         {
             await checkLogin();
+            if (!loggedIn)
+            {
+                uriHelper.NavigateTo("/login");
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender && !loggedIn)
-            {
-                uriHelper.NavigateTo("/login");
-            }
-
+            
             await base.OnAfterRenderAsync(firstRender);
         }
 
         private async Task<GridDataProviderResult<FinLoggingDataRow>> LoggingRowDataProvider(GridDataProviderRequest<FinLoggingDataRow> request)
         {
+            await checkLogin();
             if (loggedIn)
             {
                 if (dataRows is null)
                 {
-                    FinLoggingDataService finLoggingDataService = new FinLoggingDataService();
+                    FinLoggingDataService finLoggingDataService = new FinLoggingDataService(uid);
                     dataRows = finLoggingDataService.GetDataRows();
                 }
                 return await Task.FromResult(request.ApplyTo(dataRows));
@@ -305,18 +307,22 @@
         private async Task checkLogin()
         {
             var token = "";
+            int userId = -1;
             try
             {
                 token = await sessionStorage.GetItemAsync<string>("LoggedIn");
-            }catch(Exception ex)
+                userId = await sessionStorage.GetItemAsync<int>("uid");
+            }
+            catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
 
 
             if (token != null && token.Equals("true"))
             {
                 loggedIn = true;
+                uid = userId;
             }
             else
             {

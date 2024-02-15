@@ -113,3 +113,4 @@ msbuild.wrn
 /LoggiFinTests/obj/Debug/net7.0/LoggiFinTests.AssemblyInfoInputs.cache
 /LoggiFinTests/obj/Debug/net7.0/LoggiFinTests.assets.cache
 /LoggiFinTests/obj/Debug/net7.0/LoggiFinTests.GeneratedMSBuildEditorConfig.editorconfig
+/LoggiFin/obj/Debug/net7.0/LoggiFin.csproj.AssemblyReference.cache

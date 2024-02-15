@@ -158,26 +158,33 @@
     {
         var token = "";
         int userId = -1;
-        try
+
+        for(int i = 0;i < 5; i++)
         {
-            token = await sessionStorage.GetItemAsync<string>("LoggedIn");
-            userId = await sessionStorage.GetItemAsync<int>("uid");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+            try
+            {
+                token = await sessionStorage.GetItemAsync<string>("LoggedIn");
+                userId = await sessionStorage.GetItemAsync<int>("uid");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
 
-        if (token != null && token.Equals("true"))
-        {
-            loggedIn = true;
-            uid = userId;
+            if (token != null && token.Equals("true"))
+            {
+                loggedIn = true;
+                uid = userId;
+                StateHasChanged();
+                return;
+            }
+            else
+            {
+                loggedIn = false;
+            }
         }
-        else
-        {
-            loggedIn = false;
-        }
+        
 
         StateHasChanged();
     }

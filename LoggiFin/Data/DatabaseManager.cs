@@ -85,10 +85,11 @@ namespace LoggiFin.Data
         }
 
         public bool insertDataIntoDb(int uid, DateOnly date, double einnahmen, double ausgaben, double kontostand, double sparkonto,
-            double scalableSparplan, double volksbankSparplan, string beschreibung, double totalAmount, double bargeld, double urlaubskasse)
+            double scalableSparplan, double volksbankSparplan, double scalableTotal, double volksbankTotal, string beschreibung, double totalAmount, double bargeld, double urlaubskasse)
         {
 
-            int res = connection.ExecuteSql("INSERT INTO investmentdaten VALUES(DEFAULT, " + uid + ", " + volksbankSparplan.ToString().Replace(",", ".") + ", " + scalableSparplan.ToString().Replace(",", ".") + ")");
+            int res = connection.ExecuteSql("INSERT INTO investmentdaten VALUES(DEFAULT, " + uid + ", " + volksbankSparplan.ToString().Replace(",", ".") + ", " + scalableSparplan.ToString().Replace(",", ".") 
+                + ", " + volksbankTotal.ToString().Replace(",", ".") + ", " + scalableTotal.ToString().Replace(",", ".") + ")");
             if (res == 0) return false;
 
             res = connection.ExecuteSql("INSERT INTO kontodaten VALUES(DEFAULT, " + uid + ", " + einnahmen.ToString().Replace(",", ".") + ", " + ausgaben.ToString().Replace(",", ".") + ", " + kontostand.ToString().Replace(",", ".") + ", " + sparkonto.ToString().Replace(",", ".") + ")");
@@ -241,5 +242,6 @@ namespace LoggiFin.Data
 
             return true;
         }
+
     }
 }

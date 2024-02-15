@@ -33,8 +33,12 @@
         <CurrencyInput TValue="double" @bind-Value="@sparkonto" Placeholder="Sparkonto" />
         <label>Scalable Sparplan</label>
         <CurrencyInput TValue="double" @bind-Value="@scalableSparplan" Placeholder="Scalable Sparplan" />
+        <label>Scalable Total Invest</label>
+        <CurrencyInput TValue="double" @bind-Value="@scalableTotal" Placeholder="Scalable Sparplan" />
         <label>Volksbank Sparplan</label>
         <CurrencyInput TValue="double" @bind-Value="@volksbankSparplan" Placeholder="Volksbank Sparplan" />
+        <label>Volksbank Total Invest</label>
+        <CurrencyInput TValue="double" @bind-Value="@volksbankTotal" Placeholder="Volksbank Sparplan" />
         <label>Beschreibung Transfer</label>
         <InputText @bind-Value="@descr">Beschreibung</InputText>
         <br /><label>Transfermenge</label>
@@ -76,6 +80,8 @@
         private double transfer = 0;
         private double bargeld = 0;
         private double urlaubskasse = 0;
+        private double volksbankTotal = 0;
+        private double scalableTotal = 0;
         string descr = "";
         int datasetID = -1;
         string comment = "";
@@ -94,7 +100,7 @@
                 if (descr.Replace(" ", "") != "")
                 {
                     mngr.insertDataIntoDb(uid, date1, einnahmen, ausgaben, kontostand, sparkonto,
-                    scalableSparplan, volksbankSparplan, descr, transfer, bargeld, urlaubskasse);
+                    scalableSparplan, volksbankSparplan, scalableTotal, volksbankTotal, descr, transfer, bargeld, urlaubskasse);
 
                     confirmSend();
 
@@ -234,8 +240,14 @@
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Scalable Sparplan" PropertyName="scalableSparplan" SortString="Scalable Sparplan" SortKeySelector="item => item.scalableSparplan">
         @context.scalableSparplan.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Scalable Sparplan Total" PropertyName="scalableSparplan" SortString="Scalable Sparplan" SortKeySelector="item => item.scalableSparplan">
+        @context.scalableSparplanTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Volksbank Sparplan" PropertyName="volksbankSparplan" SortString="Volksbank Sparplan" SortKeySelector="item => item.volksbankSparplan">
         @context.volksbankSparplan.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Volksbank Sparplan Total" PropertyName="volksbankSparplan" SortString="Volksbank Sparplan" SortKeySelector="item => item.volksbankSparplan">
+        @context.volksbankSparplanTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Transfer" PropertyName="amountTotal" SortString="Transfer" SortKeySelector="item => item.amoutTotal">
         <Tooltip Title="@FinLoggingDataService.getTransferText(@context.rowId, uid)">@context.amoutTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))</Tooltip>
@@ -308,26 +320,33 @@
         {
             var token = "";
             int userId = -1;
-            try
+
+            for (int i = 0; i < 5; i++)
             {
-                token = await sessionStorage.GetItemAsync<string>("LoggedIn");
-                userId = await sessionStorage.GetItemAsync<int>("uid");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+                try
+                {
+                    token = await sessionStorage.GetItemAsync<string>("LoggedIn");
+                    userId = await sessionStorage.GetItemAsync<int>("uid");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
 
 
-            if (token != null && token.Equals("true"))
-            {
-                loggedIn = true;
-                uid = userId;
+                if (token != null && token.Equals("true"))
+                {
+                    loggedIn = true;
+                    uid = userId;
+                    StateHasChanged();
+                    return;
+                }
+                else
+                {
+                    loggedIn = false;
+                }
             }
-            else
-            {
-                loggedIn = false;
-            }
+
 
             StateHasChanged();
         }

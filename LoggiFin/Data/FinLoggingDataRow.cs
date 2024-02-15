@@ -16,6 +16,8 @@ namespace LoggiFin.Data
         //investdaten eigenschaften
         public double volksbankSparplan { get; set; }
         public double scalableSparplan { get; set; }
+        public double volksbankSparplanTotal { get; set; }
+        public double scalableSparplanTotal { get; set; }
 
         //transferdaten eigenschaften
         public string beschreibung { get; set; }
@@ -38,7 +40,9 @@ namespace LoggiFin.Data
             this.sparkontostand = kdt.sparkontostand;
             //Investdaten
             this.scalableSparplan = idt.scalableStand;
+            this.scalableSparplanTotal = idt.scalableInvTotal;
             this.volksbankSparplan = idt.volksbankStand;
+            this.volksbankSparplanTotal = idt.volksbankInvTotal;
             //transferdaten
             this.beschreibung = tdt.beschreibung;
             this.amoutTotal = tdt.amountTotal;

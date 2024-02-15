@@ -75,6 +75,8 @@ namespace LoggiFin.Data.Tests
             Assert.IsTrue(res.investdatenID_PK == investdatenID_PK);
             Assert.IsTrue(res.volksbankStand != double.MinValue);
             Assert.IsTrue(res.scalableStand != double.MinValue);
+            Assert.IsTrue(res.volksbankInvTotal != double.MinValue);
+            Assert.IsTrue(res.scalableInvTotal != double.MinValue);
 
             Trace.WriteLine(res.scalableStand);
         }
@@ -135,9 +137,11 @@ namespace LoggiFin.Data.Tests
             double transfAmount = rnd.NextDouble() * einnahmen;
             double bargeld = rnd.NextDouble() * 500;
             double urlaubskasse = rnd.NextDouble() * 1000;
+            double scalableTotal = rnd.NextDouble() * 100000;
+            double volksbankTotal = rnd.NextDouble() * 2000;
             //when
             bool res = manager.insertDataIntoDb(1, date, einnahmen, ausgaben, kontostand,
-                sparkontostand, scalable, volksbank, transf, transfAmount, bargeld, urlaubskasse);
+                sparkontostand, scalable, volksbank, scalableTotal, volksbankTotal, transf, transfAmount, bargeld, urlaubskasse);
             //then
             Assert.IsTrue(res);
         }

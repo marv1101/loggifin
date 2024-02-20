@@ -17,8 +17,14 @@ namespace LoggiFin.Data
         MySqlConnectionStringBuilder db;
         DbConnection connection;
         private int[] lastIndic;
-        
 
+        /// <summary>
+        ///   <para>
+        /// Initializes a new instance of the <see cref="DatabaseManager" /> class.
+        /// </para>
+        ///   <para>Constructor instializes the database manager either in testing mode or in productive mode.<br />This means that different database configurations will be used. Can be seperate tables, schemas and even servers. Schemes have to match specifications to be used.</para>
+        /// </summary>
+        /// <param name="testingMode">if set to <c>true</c> [testing mode].</param>
         public DatabaseManager(bool testingMode) {
 
             if (testingMode)
@@ -37,6 +43,9 @@ namespace LoggiFin.Data
             connection = db.Connection();
         }
 
+        /// <summary>Gets the datasets of a certain user in a given timeframe.</summary>
+        /// <param name="uid">The uid.</param>
+        /// <returns>List of Finanzdaten belonging to a given user</returns>
         public List<Finanzdaten> getData(int uid)
         {
             List<Finanzdaten> res = (List<Finanzdaten>) connection.QuerySql<Finanzdaten>("SELECT * FROM finanzdaten WHERE userID_FK = " + uid + " ORDER BY entryDate ASC");
@@ -44,6 +53,35 @@ namespace LoggiFin.Data
             return res;
         }
 
+
+        /// <summary>Gets the datasets of a certain user in a given timeframe.</summary>
+        /// <param name="uid">The uid.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <returns>List of Finanzdaten belonging to a cetrain user in a specified timeframe</returns>
+        public List<Finanzdaten> getData(int uid, DateOnly start, DateOnly end)
+        {
+            List<Finanzdaten> res = (List<Finanzdaten>)connection.QuerySql<Finanzdaten>("SELECT * FROM finanzdaten WHERE userID_FK = " + uid + " AND entryDate > '" + reformatDateForDb(start) + "' AND entryDate < '" +
+                reformatDateForDb(end) + "' ORDER BY entryDate ASC");
+
+            return res;
+        }
+
+
+        /// <summary>Reformats the date for the mysql database.</summary>
+        /// <param name="date">The date.</param>
+        /// <returns>The reformatted date as a string</returns>
+        public String reformatDateForDb(DateOnly date)
+        {
+            return date.Year + "." + date.Month + "." + date.Day;
+        }
+
+        /// <summary>Gets the account data specified by a userID and the account data id.</summary>
+        /// <param name="kontodatenID_FK">The kontodaten identifier fk.</param>
+        /// <param name="userID_FK">The user identifier fk.</param>
+        /// <returns>
+        ///   <para>Kontodaten matching the given Parameters</para>
+        /// </returns>
         public Kontodaten getKontodaten(int kontodatenID_FK, int userID_FK)
         {
             Kontodaten res = ((List<Kontodaten>)connection.QuerySql<Kontodaten>("SELECT * FROM kontodaten WHERE kontodatenID_PK = " + kontodatenID_FK + " AND userID_FK = " + userID_FK)).First();
@@ -51,6 +89,10 @@ namespace LoggiFin.Data
             return res;
         }
 
+        /// <summary>Gets the investdaten for the given parameters.</summary>
+        /// <param name="investdatenID_PK">The investdaten identifier pk.</param>
+        /// <param name="userID_FK">The user identifier fk.</param>
+        /// <returns>Investmentdaten for the given Parameters</returns>
         public Investmentdaten getInvestdaten(int investdatenID_PK, int userID_FK)
         {
             Investmentdaten res = ((List<Investmentdaten>)connection.QuerySql<Investmentdaten>("SELECT * FROM investmentdaten WHERE investdatenID_PK = " + investdatenID_PK + " AND userID_FK = " + userID_FK)).First();

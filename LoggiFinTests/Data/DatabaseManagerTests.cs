@@ -42,6 +42,33 @@ namespace LoggiFin.Data.Tests
         }
 
         [TestMethod()]
+        public void getDataWithDateTest()
+        {
+            //given
+            DatabaseManager manager = new DatabaseManager(true);
+
+            DateOnly start = DateOnly.MinValue;
+            DateOnly end = DateOnly.FromDateTime(DateTime.Now);
+
+            //when
+            List<Finanzdaten> res = manager.getData(1, start, end);
+            Finanzdaten fstElem = res.Last();
+
+            //then
+            Assert.IsFalse(res.Count == 0);
+            Assert.IsTrue(fstElem != null);
+            Assert.IsTrue(fstElem.datasetID_PK != 0);
+            Assert.IsTrue(fstElem.kontodatenID_FK != 0);
+            Assert.IsTrue(fstElem.investdatenID_FK != 0);
+            Assert.IsTrue(fstElem.transferdatenID_FK != 0);
+            Assert.IsTrue(fstElem.bargelddatenID_FK != 0);
+            Assert.IsTrue(fstElem.entryDate.Year > 2000);
+
+            Trace.WriteLine(fstElem.datasetID_PK);
+            Trace.WriteLine(fstElem.entryDate);
+        }
+
+        [TestMethod()]
         public void getKontodatenTest()
         {
             //given

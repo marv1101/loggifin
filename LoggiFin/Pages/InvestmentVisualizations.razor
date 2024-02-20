@@ -1,0 +1,186 @@
+﻿@page "/investmentVisualizations"
+
+@using BlazorBootstrap.Extensions
+@using Color = System.Drawing.Color
+@using LoggiFin.DBO;
+@using LoggiFin.Data;
+@using LoggiFin.Global;
+
+@inject BrowserService Service
+@inject NavigationManager uriHelper;
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+
+<PageTitle> Investment Vizualizations </PageTitle>
+
+<Tabs>
+    <Tab title="Investment Returns" IsActive="true"> 
+        <Content>
+            <LineChart @ref="investmentReturns" Width="@widthMinHundred" />
+        </Content>
+    </Tab>
+</Tabs>
+
+@code {
+    FinLoggingDataService finLoggingDataService;
+    IEnumerable<FinLoggingDataRow> finLoggingDataRows;
+
+    private LineChartOptions lineChartOptions;
+    private LineChartDataset investChartData;
+
+    private ChartData investData;
+
+    private LineChart investmentReturns = default!;
+
+    List<double> investedScalable;
+    List<double> returnsScalable;
+
+    List<double> investedVb;
+    List<double> returnsVb;
+
+    List<double> percentageInvestmentReturnScalable;
+    List<double> percentageInvestmentReturnVb;
+
+    List<String> dates;
+
+    bool loggedIn = false;
+    int uid = 0;
+
+    private int height { get; set; }
+    private int width { get; set; }
+    private int halfWidth { get; set; }
+    private int widthMinHundred { get; set; }
+
+    async Task GetDimensions()
+    {
+        var dimension = await Service.GetDimensions();
+        height = dimension.Height;
+        width = dimension.Width;
+        halfWidth = (int)(width / 2);
+        widthMinHundred = (int)(width - (width / 6));
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+    }
+
+    protected override async void OnInitialized()
+    {
+
+        await GetDimensions();
+        await checkLogin();
+        if (!loggedIn)
+        {
+            uriHelper.NavigateTo("/login");
+        }
+        else
+        {
+
+            finLoggingDataService = new FinLoggingDataService(uid);
+
+            finLoggingDataRows = finLoggingDataService.GetDataRows();
+
+            investedScalable = new List<double>();
+            returnsScalable = new List<double>();
+            percentageInvestmentReturnScalable = new List<double>();
+
+            investedVb = new List<double>();
+            returnsVb = new List<double>();
+            percentageInvestmentReturnVb = new List<double>();
+
+            dates = new List<String>();
+
+            foreach(FinLoggingDataRow row in finLoggingDataRows)
+            {
+                investedScalable.Add(row.scalableSparplanTotal);
+                returnsScalable.Add(row.scalableSparplan);
+
+                investedVb.Add(row.volksbankSparplanTotal);
+                returnsVb.Add(row.volksbankSparplan);
+
+                double returnScalableInPercent = Math.Round((row.scalableSparplanTotal > 0 ? (row.scalableSparplan / row.scalableSparplanTotal) * 100 : 0), 2);
+                percentageInvestmentReturnScalable.Add(returnScalableInPercent);
+
+                double returnVbInPercent = Math.Round((row.volksbankSparplanTotal > 0 ? (row.volksbankSparplan / row.volksbankSparplanTotal) * 100 : 0), 2);
+                percentageInvestmentReturnVb.Add(returnVbInPercent);
+
+                dates.Add(row.date.ToString());
+            }
+
+
+            investChartData = createLineDataSetFromDoubleList("Scalable Percentage Returns", percentageInvestmentReturnScalable, Color.LawnGreen);
+            LineChartDataset l2 = createLineDataSetFromDoubleList("Volksbank Percentage Returns", percentageInvestmentReturnVb, Color.MidnightBlue);
+
+
+            lineChartOptions = new LineChartOptions
+            {
+                Responsive = true,
+                Interaction = new Interaction { Mode = InteractionMode.Index },
+            };
+
+            investData = new ChartData
+                {
+                    Labels = dates,
+                    Datasets = new List<IChartDataset>()
+                };
+
+            investData.Datasets.Add(investChartData);
+            investData.Datasets.Add(l2);
+
+            await investmentReturns.InitializeAsync(investData, lineChartOptions);
+
+        }
+    }
+
+    private LineChartDataset createLineDataSetFromDoubleList(string label, List<double> data, Color color)
+    {
+        return new LineChartDataset()
+            {
+                Label = label,
+                Data = data,
+                BackgroundColor = new List<string> { color.ToRgbString() },
+                BorderColor = new List<string> { color.ToRgbString() },
+                BorderWidth = new List<double> { 2 },
+                HoverBorderWidth = new List<double> { 4 },
+                PointBackgroundColor = new List<string> { color.ToRgbString() },
+                PointRadius = new List<int> { 3 },
+                PointHoverRadius = new List<int> { 4 },
+            };
+    }
+
+    private async Task checkLogin()
+    {
+        var token = "";
+        int userId = -1;
+
+        for (int i = 0; i < 5; i++)
+        {
+            try
+            {
+                token = await sessionStorage.GetItemAsync<string>("LoggedIn");
+                userId = await sessionStorage.GetItemAsync<int>("uid");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+
+            if (token != null && token.Equals("true"))
+            {
+                loggedIn = true;
+                uid = userId;
+                StateHasChanged();
+                return;
+            }
+            else
+            {
+                loggedIn = false;
+            }
+        }
+
+
+        StateHasChanged();
+    }
+}

@@ -13,6 +13,13 @@
 
 <PageTitle>Diagrams</PageTitle>
 
+<h4>Datenzeitraum anzeigen:</h4>
+<label for="from">Von</label>
+<DateInput TValue="DateOnly" @bind-Value="@start" id="from" onchange="@refreshData()" />
+
+<label for="to">bis</label>
+<DateInput TValue="DateOnly" @bind-Value="@end" id="to" onchange="@refreshData()" />
+
 <Tabs>
     <Tab Title="Diagram Einnahmen vs. Ausgaben" IsActive="true">
         <Content>
@@ -88,6 +95,9 @@
     Random rand = new Random();
 
     bool loggedIn = false;
+
+    private DateOnly start = DateOnly.FromDateTime(DateTime.Now.Subtract(TimeSpan.FromDays(365)));
+    private DateOnly end = DateOnly.FromDateTime(DateTime.Now);
 
 
     protected override async void OnInitialized()
@@ -217,6 +227,139 @@
 
 
 
+    }
+
+    private async Task refreshData()
+    {
+        finLoggingDataService = new FinLoggingDataService(uid, start, end);
+
+        data = finLoggingDataService.GetDataRows();
+        abokosten = finLoggingDataService.GetAbokosten();
+
+        labels.Clear();
+        einnahmen.Clear();
+        ausgaben.Clear();
+        kontostand.Clear();
+        sparkontostand.Clear();
+        scalable.Clear();
+        volksbank.Clear();
+        bargeld.Clear();
+        urlaubskasse.Clear();
+        total.Clear();
+
+        aboTitel.Clear();
+        abokostenTotal.Clear();
+
+        foreach (FinLoggingDataRow row in data)
+        {
+            labels.Add(row.date.ToString());
+            einnahmen.Add(row.einnahmen);
+            ausgaben.Add(row.ausgaben);
+            kontostand.Add(row.kontostand);
+            sparkontostand.Add(row.sparkontostand);
+            scalable.Add(row.scalableSparplan);
+            volksbank.Add(row.volksbankSparplan);
+            bargeld.Add(row.bargeld);
+            urlaubskasse.Add(row.urlaubskasse);
+            total.Add(row.totalBalance);
+        }
+
+        //Abokosten
+        foreach (Abokosten abos in abokosten)
+        {
+            double totalPrice = abos.kosten;
+            double deductSharing = abos.geteilt;
+
+            abokostenTotal.Add(totalPrice - deductSharing);
+            aboTitel.Add(abos.titel);
+        }
+
+        aboDistrData = new ChartData
+            {
+                Labels = aboTitel,
+                Datasets = new List<IChartDataset>()
+            };
+
+        List<Color> col = new List<Color>();
+
+        for (int i = 0; i < abokostenTotal.Count; i++)
+        {
+            int r = rand.Next(255);
+            int g = rand.Next(255);
+            int b = rand.Next(255);
+            col.Add(Color.FromArgb(r, g, b));
+        }
+
+        aboDistrData.Datasets.Add(createDoughnutDataSetFromDoubleList(abokostenTotal, col.ToArray()));
+
+        //Einnahmen vs Ausgaben
+        chartData = new ChartData
+            {
+                Labels = labels,
+                Datasets = new List<IChartDataset>()
+            };
+
+        chartData.Datasets.Add(createDataSetFromDoubleList("Einnahmen", einnahmen, Color.LightGreen));
+        chartData.Datasets.Add(createDataSetFromDoubleList("Ausgaben", ausgaben, Color.IndianRed));
+
+        chartDataCapital = new ChartData
+            {
+                Labels = labels,
+                Datasets = new List<IChartDataset>()
+            };
+
+        //Gesamtvermögen
+        chartDataCapital.Datasets.Add(createLineDataSetFromDoubleList("Gesamtvermögen", total, Color.LightSkyBlue));
+
+        //Vermögensaufteilung
+        capitalDistrData = new ChartData
+            {
+                Labels = new List<string> { "Kontostand", "Sparkontostand", "Scalable", "Volksbank", "Bargeld", "Urlaubsgeld" },
+                Datasets = new List<IChartDataset>()
+            };
+
+        List<double> dist;
+        try
+        {
+            dist = new List<double> { kontostand.Last(), sparkontostand.Last(), scalable.Last(), volksbank.Last(), bargeld.Last(), urlaubskasse.Last() };
+        }
+        catch (Exception e)
+        {
+            dist = new List<double>();
+        }
+        Color[] colors = { Color.Coral, Color.Aqua, Color.DarkOliveGreen, Color.DarkSalmon, Color.Firebrick, Color.RebeccaPurple };
+
+        capitalDistrData.Datasets.Add(createDoughnutDataSetFromDoubleList(dist, colors));
+
+        //options
+        chartOptions = new BarChartOptions
+            {
+                Responsive = true,
+                Interaction = new Interaction { Mode = InteractionMode.Index }
+            };
+
+        lineChartOptions = new LineChartOptions
+            {
+                Responsive = true,
+                Interaction = new Interaction { Mode = InteractionMode.Index }
+            };
+
+        capitalDistrobutionOptions = new DoughnutChartOptions
+            {
+                Responsive = true
+            };
+
+        aboDistrobutionOptions = new DoughnutChartOptions
+            {
+                Responsive = true
+            };
+
+        await GetDimensions();
+        await inOutChart.UpdateAsync(chartData, chartOptions);
+        await capitalChange.UpdateAsync(chartDataCapital, lineChartOptions);
+        await capitalDistrobution.UpdateAsync(capitalDistrData, capitalDistrobutionOptions);
+        await aboDistrobution.UpdateAsync(aboDistrData, aboDistrobutionOptions);
+        await aboDistrobution.UpdateAsync(aboDistrData, aboDistrobutionOptions);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -210,6 +210,14 @@
 </div>
 
 <div>
+
+    <h4>Datenzeitraum anzeigen:</h4>
+    <label for="from">Von</label>
+    <DateInput TValue="DateOnly" @bind-Value="@start" id="from" onchange="@reloadGrid()" />
+
+    <label for="to">bis</label>
+    <DateInput TValue="DateOnly" @bind-Value="@end" id="to" onchange="@reloadGrid()" />
+
     <Grid @ref="grid"
       TItem="FinLoggingDataRow"
       Class="table table-hover table-bordered table-striped"
@@ -217,7 +225,9 @@
       AllowFiltering="true"
       AllowSorting="true"
       Responsive="true"
-      RowClass="getRowClass">
+      RowClass="getRowClass"
+      AllowPaging="true"
+      PageSize="12">
 
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Id" PropertyName="rowId">
         <Tooltip Title="@getCommentString(context.rowId)">@context.rowId</Tooltip>
@@ -264,9 +274,13 @@
 
 </Grid>
 
-@code {
+    @code {
         BlazorBootstrap.Grid<FinLoggingDataRow> grid = default!;
         private IEnumerable<FinLoggingDataRow> dataRows = default!;
+
+
+        private DateOnly start = DateOnly.FromDateTime(DateTime.Now.Subtract(TimeSpan.FromDays(365)));
+        private DateOnly end = DateOnly.FromDateTime(DateTime.Now);
 
         protected override async Task OnInitializedAsync()
         {
@@ -279,8 +293,18 @@
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            
+
             await base.OnAfterRenderAsync(firstRender);
+        }
+
+        private async Task reloadGrid()
+        {
+            if(grid != null)
+            {
+                FinLoggingDataService finLoggingDataService = new FinLoggingDataService(uid, start, end);
+                dataRows = finLoggingDataService.GetDataRows();
+                await grid.RefreshDataAsync();
+            }
         }
 
         private async Task<GridDataProviderResult<FinLoggingDataRow>> LoggingRowDataProvider(GridDataProviderRequest<FinLoggingDataRow> request)
@@ -290,8 +314,9 @@
             {
                 if (dataRows is null)
                 {
-                    FinLoggingDataService finLoggingDataService = new FinLoggingDataService(uid);
+                    FinLoggingDataService finLoggingDataService = new FinLoggingDataService(uid, start, end);
                     dataRows = finLoggingDataService.GetDataRows();
+                    
                 }
                 return await Task.FromResult(request.ApplyTo(dataRows));
             }

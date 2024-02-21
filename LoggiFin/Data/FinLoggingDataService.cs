@@ -57,6 +57,51 @@ namespace LoggiFin.Data
             dataRows = data;
         }
 
+        public FinLoggingDataService(int uid, DateOnly queryStart, DateOnly queryEnd)
+        {
+            if (dbm == null)
+            {
+                dbm = new DatabaseManager(GlobalProperties.debug);
+            }
+            List<Finanzdaten> finanzdaten = dbm.getData(uid, queryStart, queryEnd);
+            abokosten = dbm.getAbokosten(uid);
+
+            List<FinLoggingDataRow> data = new List<FinLoggingDataRow>();
+            Kontodaten kdt;
+            Investmentdaten idt;
+            Transferdaten tdt;
+            Bargelddaten bdt;
+
+            foreach (Finanzdaten fin in finanzdaten)
+            {
+                //staing same
+                int id = fin.datasetID_PK;
+                DateOnly date = DateOnly.FromDateTime(fin.entryDate);
+
+                //to process
+                int kontodatenID = fin.kontodatenID_FK;
+                //kontodaten processing
+                kdt = dbm.getKontodaten(kontodatenID, uid);
+
+                //investdaten processing
+                int investDatenID = fin.investdatenID_FK;
+                idt = dbm.getInvestdaten(investDatenID, uid);
+
+                //transferdaten processing
+                int transferDatenID = fin.transferdatenID_FK;
+                tdt = dbm.getTransferdaten(transferDatenID, uid);
+
+                //bargelddaten processing
+                int bargeldDatenID = fin.bargelddatenID_FK;
+                bdt = dbm.getBargelddaten(bargeldDatenID, uid);
+
+                data.Add(new FinLoggingDataRow(id, date, kdt, idt, tdt, bdt));
+
+            }
+
+            dataRows = data;
+        }
+
         public IEnumerable<FinLoggingDataRow> GetDataRows()
         {
             return this.dataRows;

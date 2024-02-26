@@ -58,5 +58,13 @@ namespace LoggiFin.Data
             return Math.Round((this.einnahmen - this.ausgaben), 2) + "€";
         }
 
+        override
+        public string ToString()
+        {
+            return rowId + ", " + date + ", " + einnahmen.ToString().Replace(",", "") + ", " + ausgaben.ToString().Replace(",", "") + ", " + kontostand.ToString().Replace(",", "") + ", " + sparkontostand.ToString().Replace(",", "") + ", "
+                + scalableSparplan.ToString().Replace(",", "") + ", " + scalableSparplanTotal.ToString().Replace(",", "") + ", " + volksbankSparplan.ToString().Replace(",", "") + ", " + volksbankSparplanTotal.ToString().Replace(",", "") + ", "
+                + beschreibung + ", " + amoutTotal.ToString().Replace(",", "") + ", " + bargeld.ToString().Replace(",", "") + ", " + urlaubskasse.ToString().Replace(",", "") + ", " + totalBalance.ToString().Replace(",", "");
+        }
+
     }
 }

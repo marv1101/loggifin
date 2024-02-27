@@ -1,4 +1,5 @@
-﻿using LoggiFin.Data;
+﻿using Insight.Database.Reliable;
+using LoggiFin.Data;
 using System.IO;
 using System.Text;
 
@@ -44,6 +45,28 @@ namespace LoggiFin.Services
             }
 
             return true;
+        }
+
+        public Stream getFileStreamForDownload()
+        {
+            if (data == null)
+            {
+                return Stream.Null;
+            }
+
+            FileInfo file = new FileInfo("export.csv");
+            
+            bool res = createFile();
+
+            if(res)
+            {
+                return File.OpenRead(file.Name);
+            }
+            else
+            {
+                return Stream.Null;
+            }
+            
         }
 
     }

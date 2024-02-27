@@ -3,9 +3,11 @@
 @using LoggiFin.Data;
 @using System.Globalization;
 @using LoggiFin.Global;
+@using LoggiFin.Services;
 
 @inject NavigationManager uriHelper;
 @inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject IJSRuntime JS
 
 <PageTitle>Data Input</PageTitle>
 
@@ -274,6 +276,12 @@
 
 </Grid>
 
+<br />
+
+<Button title="Export" @onclick="DownloadFileFromStream" Color="ButtonColor.Primary">Export</Button>
+
+
+
     @code {
         BlazorBootstrap.Grid<FinLoggingDataRow> grid = default!;
         private IEnumerable<FinLoggingDataRow> dataRows = default!;
@@ -281,6 +289,21 @@
 
         private DateOnly start = DateOnly.FromDateTime(DateTime.Now.Subtract(TimeSpan.FromDays(365)));
         private DateOnly end = DateOnly.FromDateTime(DateTime.Now);
+
+        private async Task DownloadFileFromStream()
+        {
+            CSVExporter exporter = new CSVExporter(dataRows.ToList());
+            using (var streamBuff = exporter.getFileStreamForDownload())
+            {
+                var fileName = "export.csv";
+
+                using var streamRef = new DotNetStreamReference(stream: streamBuff);
+
+                await Task.Delay(TimeSpan.FromMilliseconds(1000));
+
+                await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+            }
+        }
 
         protected override async Task OnInitializedAsync()
         {

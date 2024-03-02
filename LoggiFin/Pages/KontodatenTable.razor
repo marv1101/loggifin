@@ -1,0 +1,186 @@
+﻿@page "/kontostand"
+
+@using LoggiFin.DBO;
+@using LoggiFin.Data;
+@using System.Globalization;
+@using LoggiFin.Global;
+@using LoggiFin.Services;
+
+@inject NavigationManager uriHelper;
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject IJSRuntime JS
+
+<h3>Kontostand</h3>
+
+<div>
+
+        <h4>Datenzeitraum anzeigen:</h4>
+    <label for="from">Von</label>
+    <DateInput TValue="DateOnly" @bind-Value="@start" id="from" onchange="@reloadGrid()" />
+
+    <label for="to">bis</label>
+    <DateInput TValue="DateOnly" @bind-Value="@end" id="to" onchange="@reloadGrid()" />
+
+    <Grid @ref="grid"
+      TItem="FinLoggingDataRow"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="LoggingRowDataProvider"
+      AllowFiltering="true"
+      AllowSorting="true"
+      Responsive="true"
+      RowClass="getRowClass"
+      AllowPaging="true"
+      PageSize="12">
+
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Datum" PropertyName="date" SortString="Date" SortKeySelector="item => item.date" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
+        <Tooltip Title="@context.getProfitsAsEuro()">@context.date</Tooltip>
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Einnahmen" PropertyName="einnahmen" SortString="Einnahmen" SortKeySelector="item => item.einnahmen">
+        @context.einnahmen.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Ausgaben" PropertyName="ausgaben" SortString="Ausgaben" SortKeySelector="item => item.ausgaben">
+        @context.ausgaben.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Kontostand" PropertyName="kontostand" SortString="Kontostand" SortKeySelector="item => item.kontostand">
+        @context.kontostand.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Sparkontostand" PropertyName="sparkontostand" SortString="Sparkontostand" SortKeySelector="item => item.sparkontostand">
+        @context.sparkontostand.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Transfer" PropertyName="amountTotal" SortString="Transfer" SortKeySelector="item => item.amoutTotal">
+        <Tooltip Title="@FinLoggingDataService.getTransferText(@context.rowId, uid)">@context.amoutTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))</Tooltip>
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Bargeld" PropertyName="bargeld" SortString="Bargeld" SortKeySelector="item => item.bargeld">
+        @context.bargeld.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Urlaubskasse" PropertyName="urlaubskasse" SortString="Urlaubskasse" SortKeySelector="item => item.urlaubskasse">
+        @context.urlaubskasse.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Gesamtvermögen" PropertyName="gesamt" SortString="Gesamt" SortKeySelector="item => item.totalBalance">
+        @context.totalBalance.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    </GridColumn>
+
+</Grid>
+
+</div>
+
+@code {
+    int uid = -1;
+    DatabaseManager mngr = new DatabaseManager(GlobalProperties.debug);
+    bool loggedIn = false;
+
+    BlazorBootstrap.Grid<FinLoggingDataRow> grid = default!;
+    private IEnumerable<FinLoggingDataRow> dataRows = default!;
+
+
+    private DateOnly start = DateOnly.FromDateTime(DateTime.Now.Subtract(TimeSpan.FromDays(365)));
+    private DateOnly end = DateOnly.FromDateTime(DateTime.Now);
+
+    protected override async Task OnInitializedAsync()
+    {
+        await checkLogin();
+        if (!loggedIn)
+        {
+            uriHelper.NavigateTo("/login");
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task reloadGrid()
+    {
+        if (grid != null)
+        {
+            FinLoggingDataService finLoggingDataService = new FinLoggingDataService(uid, start, end);
+            dataRows = finLoggingDataService.GetDataRows();
+            await grid.RefreshDataAsync();
+        }
+    }
+
+    private async Task<GridDataProviderResult<FinLoggingDataRow>> LoggingRowDataProvider(GridDataProviderRequest<FinLoggingDataRow> request)
+    {
+        await checkLogin();
+        if (loggedIn)
+        {
+            if (dataRows is null)
+            {
+                FinLoggingDataService finLoggingDataService = new FinLoggingDataService(uid, start, end);
+                dataRows = finLoggingDataService.GetDataRows();
+
+            }
+            return await Task.FromResult(request.ApplyTo(dataRows));
+        }
+        else
+        {
+            return null;
+        }
+
+
+
+    }
+
+    private string getRowClass(FinLoggingDataRow finLoggingDataRow)
+    {
+        if (finLoggingDataRow.ausgaben > finLoggingDataRow.einnahmen)
+        {
+            return "table-danger";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    private async Task checkLogin()
+    {
+        var token = "";
+        int userId = -1;
+
+        for (int i = 0; i < 5; i++)
+        {
+            try
+            {
+                token = await sessionStorage.GetItemAsync<string>("LoggedIn");
+                userId = await sessionStorage.GetItemAsync<int>("uid");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+
+            if (token != null && token.Equals("true"))
+            {
+                loggedIn = true;
+                uid = userId;
+                StateHasChanged();
+                return;
+            }
+            else
+            {
+                loggedIn = false;
+            }
+        }
+
+
+        StateHasChanged();
+    }
+
+    private string getCommentString(int datasetID)
+    {
+        List<Kommentar> res = mngr.getCommentsForDataset(datasetID);
+
+        String stringRes = "";
+
+        foreach (Kommentar com in res)
+        {
+            stringRes += com.kommentarID_PK + "-" + com.kommentar + "; ";
+        }
+
+        return stringRes;
+    }
+}

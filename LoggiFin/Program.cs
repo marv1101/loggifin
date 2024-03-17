@@ -54,4 +54,6 @@ app.UseRequestLocalization(localizationOptions);
 
 MySqlInsightDbProvider.RegisterProvider();
 
+GlobalProperties.readFromEnv();
+
 app.Run();

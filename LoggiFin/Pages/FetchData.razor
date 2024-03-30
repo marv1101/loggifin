@@ -234,7 +234,7 @@
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Id" PropertyName="rowId">
         <Tooltip Title="@getCommentString(context.rowId)">@context.rowId</Tooltip>
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Datum" PropertyName="date" SortString="Date" SortKeySelector="item => item.date" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
+    <GridColumn TItem="FinLoggingDataRow" HeaderText="Datum" PropertyName="date" SortString="Date" SortKeySelector="item => item.date" IsDefaultSortColumn="true" SortDirection="SortDirection.Descending">
         <Tooltip Title="@context.getProfitsAsEuro()">@context.date</Tooltip>
     </GridColumn>
     <GridColumn TItem="FinLoggingDataRow" HeaderText="Einnahmen" PropertyName="einnahmen" SortString="Einnahmen" SortKeySelector="item => item.einnahmen">
@@ -288,7 +288,7 @@
 
 
         private DateOnly start = DateOnly.FromDateTime(DateTime.Now.Subtract(TimeSpan.FromDays(365)));
-        private DateOnly end = DateOnly.FromDateTime(DateTime.Now);
+        private DateOnly end = DateOnly.FromDateTime(DateTime.Now.Add(TimeSpan.FromDays(1)));
 
         private async Task DownloadFileFromStream()
         {

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LoggiFin.Data;
+using LoggiFin.DBO;
 
 namespace LoggiFin.Services.Tests
 {
@@ -13,11 +14,11 @@ namespace LoggiFin.Services.Tests
     public class CSVExporterTests
     {
         [TestMethod()]
-        public void createFileTest()
+        public async Task createFileTest()
         {
-            FinLoggingDataService dataService = new FinLoggingDataService(1);
+            APIConnector apiConnector = new APIConnector();
 
-            IEnumerable<FinLoggingDataRow> rows = dataService.GetDataRows();
+            IEnumerable<JsonDatarow> rows = await apiConnector.getDataRowsAsync(1);
 
             Assert.IsNotNull(rows);
             Assert.IsTrue(rows.Any());

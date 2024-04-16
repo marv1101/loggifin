@@ -1,5 +1,6 @@
 ﻿using Insight.Database.Reliable;
 using LoggiFin.Data;
+using LoggiFin.DBO;
 using System.IO;
 using System.Text;
 
@@ -8,10 +9,10 @@ namespace LoggiFin.Services
     public class CSVExporter
     {
 
-        private IEnumerable<FinLoggingDataRow> data;
+        private IEnumerable<JsonDatarow> data;
         private String path = "export.csv";
 
-        public CSVExporter(List<FinLoggingDataRow> toExport) {
+        public CSVExporter(List<JsonDatarow> toExport) {
 
             data = toExport;
         
@@ -36,7 +37,7 @@ namespace LoggiFin.Services
             {
                 byte[] info = new ASCIIEncoding().GetBytes(header);
                 fs.Write(info, 0, info.Length);
-                foreach (FinLoggingDataRow row in data)
+                foreach (JsonDatarow row in data)
                 {
                     info = new ASCIIEncoding().GetBytes(row.ToString().Replace("€", "¤") + "\n");
                     fs.Write(info, 0, info.Length);

@@ -215,13 +215,13 @@
 
     <h4>Datenzeitraum anzeigen:</h4>
     <label for="from">Von</label>
-    <DateInput TValue="DateOnly" @bind-Value="@start" id="from" onchange="@reloadGrid()" />
+    <DateInput TValue="DateOnly" id="from" Value="start" ValueExpression="() => start" ValueChanged="(val) =>  ReloadGridCauseFrom(val)" />
 
     <label for="to">bis</label>
-    <DateInput TValue="DateOnly" @bind-Value="@end" id="to" onchange="@reloadGrid()" />
+    <DateInput TValue="DateOnly" id="to" Value="end" ValueExpression="() => end" ValueChanged="(val) => ReloadGridCauseTo(val)" />
 
     <Grid @ref="grid"
-      TItem="FinLoggingDataRow"
+      TItem="JsonDatarow"
       Class="table table-hover table-bordered table-striped"
       DataProvider="LoggingRowDataProvider"
       AllowFiltering="true"
@@ -231,47 +231,47 @@
       AllowPaging="true"
       PageSize="12">
 
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Id" PropertyName="rowId">
-        <Tooltip Title="@getCommentString(context.rowId)">@context.rowId</Tooltip>
+    <GridColumn TItem="JsonDatarow" HeaderText="Id" PropertyName="RowId">
+        <Tooltip Title="@getCommentString(context.RowId)">@context.RowId</Tooltip>
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Datum" PropertyName="date" SortString="Date" SortKeySelector="item => item.date" IsDefaultSortColumn="true" SortDirection="SortDirection.Descending">
-        <Tooltip Title="@context.getProfitsAsEuro()">@context.date</Tooltip>
+    <GridColumn TItem="JsonDatarow" HeaderText="Datum" PropertyName="date" SortString="Date" SortKeySelector="item => item.date" IsDefaultSortColumn="true" SortDirection="SortDirection.Descending">
+        <Tooltip Title="@context.getProfitsAsEuro()">@context.GetDate()</Tooltip>
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Einnahmen" PropertyName="einnahmen" SortString="Einnahmen" SortKeySelector="item => item.einnahmen">
-        @context.einnahmen.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    <GridColumn TItem="JsonDatarow" HeaderText="Einnahmen" PropertyName="Einnahmen" SortString="Einnahmen" SortKeySelector="item => item.Einnahmen">
+        @context.Einnahmen.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Ausgaben" PropertyName="ausgaben" SortString="Ausgaben" SortKeySelector="item => item.ausgaben">
-        @context.ausgaben.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    <GridColumn TItem="JsonDatarow" HeaderText="Ausgaben" PropertyName="ausgaben" SortString="Ausgaben" SortKeySelector="item => item.Ausgaben">
+        @context.Ausgaben.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Kontostand" PropertyName="kontostand" SortString="Kontostand" SortKeySelector="item => item.kontostand">
-        @context.kontostand.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    <GridColumn TItem="JsonDatarow" HeaderText="Kontostand" PropertyName="kontostand" SortString="Kontostand" SortKeySelector="item => item.Kontostand">
+        @context.Kontostand.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Sparkontostand" PropertyName="sparkontostand" SortString="Sparkontostand" SortKeySelector="item => item.sparkontostand">
-        @context.sparkontostand.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    <GridColumn TItem="JsonDatarow" HeaderText="Sparkontostand" PropertyName="sparkontostand" SortString="Sparkontostand" SortKeySelector="item => item.Sparkontostand">
+        @context.Sparkontostand.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Scalable Sparplan" PropertyName="scalableSparplan" SortString="Scalable Sparplan" SortKeySelector="item => item.scalableSparplan">
-        @context.scalableSparplan.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    <GridColumn TItem="JsonDatarow" HeaderText="Scalable Sparplan" PropertyName="scalableSparplan" SortString="Scalable Sparplan" SortKeySelector="item => item.ScalableSparplan">
+        @context.ScalableSparplan.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Scalable Sparplan Total" PropertyName="scalableSparplan" SortString="Scalable Sparplan" SortKeySelector="item => item.scalableSparplan">
-        @context.scalableSparplanTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    <GridColumn TItem="JsonDatarow" HeaderText="Scalable Sparplan Total" PropertyName="scalableSparplanTotal" SortString="Scalable Sparplan Total" SortKeySelector="item => item.ScalableSparplanTotal">
+        @context.ScalableSparplanTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Volksbank Sparplan" PropertyName="volksbankSparplan" SortString="Volksbank Sparplan" SortKeySelector="item => item.volksbankSparplan">
-        @context.volksbankSparplan.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    <GridColumn TItem="JsonDatarow" HeaderText="Volksbank Sparplan" PropertyName="volksbankSparplan" SortString="Volksbank Sparplan" SortKeySelector="item => item.VolksbankSparplan">
+        @context.VolksbankSparplan.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Volksbank Sparplan Total" PropertyName="volksbankSparplan" SortString="Volksbank Sparplan" SortKeySelector="item => item.volksbankSparplan">
-        @context.volksbankSparplanTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    <GridColumn TItem="JsonDatarow" HeaderText="Volksbank Sparplan Total" PropertyName="volksbankSparplanTotal" SortString="Volksbank Sparplan Total" SortKeySelector="item => item.VolksbankSparplanTotal">
+        @context.VolksbankSparplanTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Transfer" PropertyName="amountTotal" SortString="Transfer" SortKeySelector="item => item.amoutTotal">
-        <Tooltip Title="@FinLoggingDataService.getTransferText(@context.rowId, uid)">@context.amoutTotal.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))</Tooltip>
+    <GridColumn TItem="JsonDatarow" HeaderText="Transfer" PropertyName="amountTotal" SortString="Transfer" SortKeySelector="item => item.TransferMenge">
+        <Tooltip Title="@FinLoggingDataService.getTransferText(@context.RowId, uid)">@context.TransferMenge.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))</Tooltip>
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Bargeld" PropertyName="bargeld" SortString="Bargeld" SortKeySelector="item => item.bargeld">
-        @context.bargeld.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    <GridColumn TItem="JsonDatarow" HeaderText="Bargeld" PropertyName="Bargeld" SortString="Bargeld" SortKeySelector="item => item.Bargeld">
+        @context.Bargeld.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Urlaubskasse" PropertyName="urlaubskasse" SortString="Urlaubskasse" SortKeySelector="item => item.urlaubskasse">
-        @context.urlaubskasse.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    <GridColumn TItem="JsonDatarow" HeaderText="Urlaubskasse" PropertyName="Urlaubskasse" SortString="Urlaubskasse" SortKeySelector="item => item.Urlaubskasse">
+        @context.Urlaubskasse.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
-    <GridColumn TItem="FinLoggingDataRow" HeaderText="Gesamtvermögen" PropertyName="gesamt" SortString="Gesamt" SortKeySelector="item => item.totalBalance">
-        @context.totalBalance.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
+    <GridColumn TItem="JsonDatarow" HeaderText="Gesamtvermögen" PropertyName="gesamt" SortString="Gesamt" SortKeySelector="item => item.getTotalBalance()">
+        @context.getTotalBalance().ToString("C", CultureInfo.CreateSpecificCulture("de-DE"))
     </GridColumn>
 
 </Grid>
@@ -283,8 +283,8 @@
 
 
     @code {
-        BlazorBootstrap.Grid<FinLoggingDataRow> grid = default!;
-        private IEnumerable<FinLoggingDataRow> dataRows = default!;
+        BlazorBootstrap.Grid<JsonDatarow> grid = default!;
+        private IEnumerable<JsonDatarow> dataRows = default!;
 
 
         private DateOnly start = DateOnly.FromDateTime(DateTime.Now.Subtract(TimeSpan.FromDays(365)));
@@ -320,25 +320,49 @@
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        private async Task reloadGrid()
+        private async Task ReloadGridCauseFrom(DateOnly f)
         {
             if(grid != null)
             {
-                FinLoggingDataService finLoggingDataService = new FinLoggingDataService(uid, start, end);
-                dataRows = finLoggingDataService.GetDataRows();
+                start = f;
                 await grid.RefreshDataAsync();
             }
         }
 
-        private async Task<GridDataProviderResult<FinLoggingDataRow>> LoggingRowDataProvider(GridDataProviderRequest<FinLoggingDataRow> request)
+        private async Task ReloadGridCauseTo(DateOnly to)
+        {
+            if (grid != null)
+            {
+                end = to;
+                await grid.RefreshDataAsync();
+            }
+        }
+
+        private async Task ReloadGrid()
+        {
+            if (grid != null)
+            {
+                APIConnector connector = new APIConnector();
+                dataRows = await connector.getDataRowsAsync(uid, start, end);
+                await grid.RefreshDataAsync();
+            }
+        }
+
+        private async Task<GridDataProviderResult<JsonDatarow>> LoggingRowDataProvider(GridDataProviderRequest<JsonDatarow> request)
         {
             await checkLogin();
             if (loggedIn)
             {
                 if (dataRows is null)
                 {
-                    FinLoggingDataService finLoggingDataService = new FinLoggingDataService(uid, start, end);
-                    dataRows = finLoggingDataService.GetDataRows();
+                    APIConnector connector = new APIConnector();
+                    if(uid > 0)
+                    {
+                        Console.WriteLine(start);
+                        Console.WriteLine(end);
+                        dataRows = await connector.getDataRowsAsync(uid, start, end);
+                    }
+                    
                     
                 }
                 return await Task.FromResult(request.ApplyTo(dataRows));
@@ -352,9 +376,9 @@
 
         }
 
-        private string getRowClass(FinLoggingDataRow finLoggingDataRow)
+        private string getRowClass(JsonDatarow finLoggingDataRow)
         {
-            if(finLoggingDataRow.ausgaben > finLoggingDataRow.einnahmen)
+            if(finLoggingDataRow.Ausgaben > finLoggingDataRow.Einnahmen)
             {
                 return "table-danger";
             }
@@ -386,6 +410,7 @@
                 {
                     loggedIn = true;
                     uid = userId;
+                    await ReloadGrid();
                     StateHasChanged();
                     return;
                 }

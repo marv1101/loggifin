@@ -26,9 +26,9 @@
         <label>Datum</label>
         <DateInput TValue="DateOnly" @bind-Value="@date1" Placeholder="Enter Date" />
         <label>Einnahmen</label>
-        <CurrencyInput TValue="double" @bind-Value="@einnahmen" Placeholder="Einnahmen" />
+        <CurrencyInput TValue="Decimal" @bind-Value="@einnahmen" Placeholder="Einnahmen" />
         <label>Ausgaben</label>
-        <CurrencyInput TValue="double" @bind-Value="@ausgaben" Placeholder="Ausgaben" />
+        <CurrencyInput TValue="Decimal" @bind-Value="@ausgaben" Placeholder="Ausgaben" />
         <label>Kontostand</label>
         <CurrencyInput TValue="double" @bind-Value="@kontostand" Placeholder="Kontostand" />
         <label>Sparkonto</label>
@@ -73,8 +73,8 @@
     @code {
         List<ToastMessage> messages = new List<ToastMessage>();
         private DateOnly date1 = DateOnly.FromDateTime(DateTime.Now);
-        private double einnahmen = 0;
-        private double ausgaben = 0;
+        private Decimal einnahmen = 0;
+        private Decimal ausgaben = 0;
         private double kontostand = 0;
         private double sparkonto = 0;
         private double scalableSparplan = 0;
@@ -88,6 +88,7 @@
         int datasetID = -1;
         string comment = "";
         DatabaseManager mngr = new DatabaseManager(GlobalProperties.debug); //schickt die Daten entweder an TestDB oder an Prod
+        APIConnector api = new APIConnector();
         bool loggedIn = false;
         int uid = -1;
 
@@ -101,8 +102,27 @@
             {
                 if (descr.Replace(" ", "") != "")
                 {
-                    mngr.insertDataIntoDb(uid, date1, einnahmen, ausgaben, kontostand, sparkonto,
-                    scalableSparplan, volksbankSparplan, scalableTotal, volksbankTotal, descr, transfer, bargeld, urlaubskasse);
+
+                    JsonDatarow datarowToAdd = new JsonDatarow();
+                    datarowToAdd.date = date1;
+                    Console.WriteLine(datarowToAdd.GetDate());
+                    datarowToAdd.Einnahmen = einnahmen;
+                    datarowToAdd.Ausgaben = ausgaben;
+                    datarowToAdd.Kontostand = kontostand;
+                    datarowToAdd.Sparkontostand = sparkonto;
+                    datarowToAdd.ScalableSparplan = scalableSparplan;
+                    datarowToAdd.VolksbankSparplan = volksbankSparplan;
+                    datarowToAdd.ScalableSparplanTotal = scalableTotal;
+                    datarowToAdd.VolksbankSparplanTotal = volksbankTotal;
+                    datarowToAdd.Beschreibung = descr;
+                    datarowToAdd.TransferMenge = transfer;
+                    datarowToAdd.Bargeld = bargeld;
+                    datarowToAdd.Urlaubskasse = urlaubskasse;
+
+                    await api.postDatarow(datarowToAdd, uid);
+
+                    //mngr.insertDataIntoDb(uid, date1, einnahmen, ausgaben, kontostand, sparkonto,
+                    //scalableSparplan, volksbankSparplan, scalableTotal, volksbankTotal, descr, transfer, bargeld, urlaubskasse);
 
                     confirmSend();
 
@@ -234,7 +254,7 @@
     <GridColumn TItem="JsonDatarow" HeaderText="Id" PropertyName="RowId">
         <Tooltip Title="@getCommentString(context.RowId)">@context.RowId</Tooltip>
     </GridColumn>
-    <GridColumn TItem="JsonDatarow" HeaderText="Datum" PropertyName="date" SortString="Date" SortKeySelector="item => item.date" IsDefaultSortColumn="true" SortDirection="SortDirection.Descending">
+    <GridColumn TItem="JsonDatarow" HeaderText="Datum" PropertyName="date" SortString="Date" SortKeySelector="item => item.GetDate()" IsDefaultSortColumn="true" SortDirection="SortDirection.Descending">
         <Tooltip Title="@context.getProfitsAsEuro()">@context.GetDate()</Tooltip>
     </GridColumn>
     <GridColumn TItem="JsonDatarow" HeaderText="Einnahmen" PropertyName="Einnahmen" SortString="Einnahmen" SortKeySelector="item => item.Einnahmen">

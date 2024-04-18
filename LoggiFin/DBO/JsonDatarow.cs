@@ -66,6 +66,9 @@ namespace LoggiFin.DBO
             if (succ)
             {
                 return toRet;
+            }else if(date != null)
+            {
+                return (DateOnly)date;
             }
 
             return DateOnly.MinValue;

@@ -108,7 +108,6 @@ build:
   script:
     - 'dotnet restore'
     - 'dotnet build'
-    - docker ps
 
 test:
   stage: test

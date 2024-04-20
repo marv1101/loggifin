@@ -63,7 +63,7 @@ namespace LoggiFin.Services.Tests
             JsonDatarow? datarow = JsonSerializer.Deserialize<JsonDatarow>(json);
 
             datarow.date = DateOnly.FromDateTime(DateTime.Now);
-            datarow.Beschreibung= "Testiiiiing";
+            datarow.Beschreibung = "Testiiiiing";
             Trace.WriteLine(datarow.GetDate());
 
             res = await connector.postDatarow(datarow, 1);
@@ -82,6 +82,51 @@ namespace LoggiFin.Services.Tests
             Boolean res = await connector.deleteDatarow(147, 1);
 
             Assert.IsNotNull(res);
+            //logic tested in backend before deployment 
+        }
+
+        [TestMethod()]
+        public async Task postCommentTest()
+        {
+            APIConnector connector = new APIConnector();
+
+            Assert.IsNotNull(connector);
+
+            Boolean res = await connector.postComment(1, "Test");
+
+            Assert.IsNotNull(res);
+            Assert.IsTrue(res);
+
+            res = await connector.postComment(-1, "testInvalid1");
+            Assert.IsFalse(res);
+            res = await connector.postComment(1, null);
+            Assert.IsFalse(res);
+        }
+
+        [TestMethod()]
+        public async Task deleteCommentTest()
+        {
+            APIConnector connector = new APIConnector();
+
+            Assert.IsNotNull(connector);
+
+            Boolean res = await connector.deleteComment(3);
+
+            Assert.IsNotNull(res);
+            //logic tested in backend before deployment
+        }
+
+        [TestMethod()]
+        public void getCommentsForDatasetTest()
+        {
+            APIConnector connector = new APIConnector();
+
+            Assert.IsNotNull(connector);
+
+            List<Kommentar>? res = connector.getCommentsForDataset(1);
+
+            Assert.IsNotNull(res);
+            Assert.IsTrue(res.Any());
         }
     }
 }

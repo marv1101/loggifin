@@ -1,4 +1,5 @@
-﻿using LoggiFin.Data;
+﻿using Insight.Database.MissingExtensions;
+using LoggiFin.Data;
 using LoggiFin.DBO;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -121,6 +122,60 @@ namespace LoggiFin.Services
             {
                 return false;
             }
+        }
+
+        public async Task<Boolean> postComment(int rowid, String comment)
+        {
+            if(comment.IsNullOrWhiteSpace())
+            {
+                return false;
+            }
+            JsonObject json = new JsonObject();
+            json.Add("findataId", rowid);
+            json.Add("comment", comment);
+
+            HttpResponseMessage response = await client.PostAsJsonAsync("kommentare", json);
+
+            if(response.StatusCode == HttpStatusCode.Created)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<Boolean> deleteComment(int commentId)
+        {
+            HttpResponseMessage response = await client.DeleteAsync("kommentare?commentId=" + commentId);
+
+            if(response.StatusCode != HttpStatusCode.NotFound)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public List<Kommentar>? getCommentsForDataset(int datasetID)
+        {
+            HttpResponseMessage response = client.GetAsync("kommentare?datasetId=" + datasetID).Result;
+
+            try
+            {
+                List<Kommentar>? res = response.Content.ReadFromJsonAsync<List<Kommentar>>().Result;
+
+                return res;
+            }catch (Exception ex)
+            {
+                return new List<Kommentar>();
+            }
+            
+
+            
         }
 
     }

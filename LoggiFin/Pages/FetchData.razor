@@ -87,7 +87,6 @@
         string descr = "";
         int datasetID = -1;
         string comment = "";
-        DatabaseManager mngr = new DatabaseManager(GlobalProperties.debug); //schickt die Daten entweder an TestDB oder an Prod
         APIConnector api = new APIConnector();
         bool loggedIn = false;
         int uid = -1;
@@ -121,9 +120,6 @@
 
                     await api.postDatarow(datarowToAdd, uid);
 
-                    //mngr.insertDataIntoDb(uid, date1, einnahmen, ausgaben, kontostand, sparkonto,
-                    //scalableSparplan, volksbankSparplan, scalableTotal, volksbankTotal, descr, transfer, bargeld, urlaubskasse);
-
                     confirmSend();
 
                     await Task.Delay(2000);
@@ -153,7 +149,13 @@
             {
                 if (comment.Replace(" ", "") != "")
                 {
-                    mngr.insertCommentForDataset(datasetID, comment);
+                    Boolean res = await api.postComment(datasetID, comment);
+
+                    if (!res)
+                    {
+                        denySend();
+                        return;
+                    }
 
                     confirmSend();
 
@@ -179,7 +181,12 @@
 
                 if (confirmation)
                 {
-                    mngr.removeData(idToDelete);
+                    Boolean res = await api.deleteDatarow(idToDelete, uid);
+
+                    if (!res)
+                    {
+                        return;
+                    }
 
                     await Task.Delay(2000);
 
@@ -204,7 +211,12 @@
 
                 if (confirmation)
                 {
-                    mngr.deleteCommentForDataset(idCommentToDelete);
+                    Boolean res = await api.deleteComment(idCommentToDelete);
+
+                    if (!res)
+                    {
+                        return;
+                    }
 
                     await Task.Delay(2000);
 
@@ -446,7 +458,7 @@
 
         private string getCommentString(int datasetID)
         {
-            List<Kommentar> res = mngr.getCommentsForDataset(datasetID);
+            List<Kommentar>? res = api.getCommentsForDataset(datasetID);
 
             String stringRes = "";
 

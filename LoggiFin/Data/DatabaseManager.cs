@@ -17,6 +17,8 @@ namespace LoggiFin.Data
         MySqlConnectionStringBuilder db;
         DbConnection connection;
         private int[] lastIndic;
+        private const string TestDbConnectionEnvVar = "LOGGIFIN_TEST_DB_CONNECTION_STRING";
+        private const string ProdDbConnectionEnvVar = "LOGGIFIN_PROD_DB_CONNECTION_STRING";
 
         /// <summary>
         ///   <para>
@@ -26,21 +28,22 @@ namespace LoggiFin.Data
         /// </summary>
         /// <param name="testingMode">if set to <c>true</c> [testing mode].</param>
         public DatabaseManager(bool testingMode) {
-
-            if (testingMode)
-            {
-                connectionString = "server=10.69.1.40;uid=LoggiFin;" +
-                "pwd=loggi!Marian-Fin;database=loggifinTest";
-            }
-            else
-            {
-                connectionString = "server=10.69.1.40;uid=ReadWrite;" +
-                "pwd=marian;database=loggifin";
-            }
-            
-
+            connectionString = getConnectionStringFromEnvironment(testingMode);
             db = new MySqlConnectionStringBuilder(connectionString);
             connection = db.Connection();
+        }
+
+        private static string getConnectionStringFromEnvironment(bool testingMode)
+        {
+            string envVarName = testingMode ? TestDbConnectionEnvVar : ProdDbConnectionEnvVar;
+            string? configuredConnectionString = Environment.GetEnvironmentVariable(envVarName);
+
+            if (string.IsNullOrWhiteSpace(configuredConnectionString))
+            {
+                throw new InvalidOperationException("Missing required database connection string configuration. Set the environment variable '" + envVarName + "'.");
+            }
+
+            return configuredConnectionString;
         }
 
         /// <summary>Gets the datasets of a certain user in a given timeframe.</summary>

@@ -106,7 +106,20 @@ msbuild.wrn
 /LoggiFinTests/obj/LoggiFinTests.csproj.nuget.g.props
 /LoggiFinTests/obj/project.assets.json
 /LoggiFinTests/obj/project.nuget.cache
-*.json
+/bin/
+/obj/
+/LoggiFin/bin/
+/LoggiFin/obj/
+/LoggiFinTests/bin/
+/LoggiFinTests/obj/
+
+# Local-only configuration and secrets
+.env
+.env.*
+!.env.example
+appsettings.*.local.json
+secrets.json
+**/secrets.json
 /LoggiFin/obj/Debug/net7.0/LoggiFin.AssemblyInfoInputs.cache
 /LoggiFin/obj/Debug/net7.0/LoggiFin.assets.cache
 /LoggiFin/obj/Debug/net7.0/LoggiFin.RazorAssemblyInfo.cache

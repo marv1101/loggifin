@@ -15,6 +15,43 @@ namespace LoggiFin.Data.Tests
     [TestClass()]
     public class DatabaseManagerTests
     {
+        private const string TestDbConnectionEnvVar = "LOGGIFIN_TEST_DB_CONNECTION_STRING";
+        private const string ProdDbConnectionEnvVar = "LOGGIFIN_PROD_DB_CONNECTION_STRING";
+        private const string AuthUserEnvVar = "LOGGIFIN_TEST_AUTH_USERNAME";
+        private const string AuthPasswordEnvVar = "LOGGIFIN_TEST_AUTH_PASSWORD";
+        private const string AuthUserIdEnvVar = "LOGGIFIN_TEST_AUTH_USER_ID";
+
+        [TestMethod()]
+        public void ConstructorThrowsWithoutConfiguredTestConnectionString()
+        {
+            string? previous = Environment.GetEnvironmentVariable(TestDbConnectionEnvVar);
+
+            try
+            {
+                Environment.SetEnvironmentVariable(TestDbConnectionEnvVar, null);
+                Assert.ThrowsException<InvalidOperationException>(() => new DatabaseManager(true));
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable(TestDbConnectionEnvVar, previous);
+            }
+        }
+
+        [TestMethod()]
+        public void ConstructorThrowsWithoutConfiguredProdConnectionString()
+        {
+            string? previous = Environment.GetEnvironmentVariable(ProdDbConnectionEnvVar);
+
+            try
+            {
+                Environment.SetEnvironmentVariable(ProdDbConnectionEnvVar, null);
+                Assert.ThrowsException<InvalidOperationException>(() => new DatabaseManager(false));
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable(ProdDbConnectionEnvVar, previous);
+            }
+        }
 
 
         [TestMethod()]
@@ -178,10 +215,17 @@ namespace LoggiFin.Data.Tests
         {
             //given
             DatabaseManager manager = new DatabaseManager(true);
+            string? username = Environment.GetEnvironmentVariable(AuthUserEnvVar);
+            string? password = Environment.GetEnvironmentVariable(AuthPasswordEnvVar);
+
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                Assert.Inconclusive("Set LOGGIFIN_TEST_AUTH_USERNAME and LOGGIFIN_TEST_AUTH_PASSWORD for this integration test.");
+            }
 
             //when
-            bool res = manager.authUser("testuser", "test");
-            bool res2 = manager.authUser("testuser1", "test");
+            bool res = manager.authUser(username, password);
+            bool res2 = manager.authUser(username + "_invalid", password);
 
             //then
             Assert.IsTrue(res);
@@ -193,13 +237,23 @@ namespace LoggiFin.Data.Tests
         {
             //given
             DatabaseManager manager = new DatabaseManager(true);
+            string? username = Environment.GetEnvironmentVariable(AuthUserEnvVar);
+            string? password = Environment.GetEnvironmentVariable(AuthPasswordEnvVar);
+            string? expectedUserIdString = Environment.GetEnvironmentVariable(AuthUserIdEnvVar);
+
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(expectedUserIdString))
+            {
+                Assert.Inconclusive("Set LOGGIFIN_TEST_AUTH_USERNAME, LOGGIFIN_TEST_AUTH_PASSWORD and LOGGIFIN_TEST_AUTH_USER_ID for this integration test.");
+            }
+
+            Assert.IsTrue(int.TryParse(expectedUserIdString, out int expectedUserId));
 
             //when
-            int res = manager.getUserIdByName("testuser", "test");
-            int res2 = manager.getUserIdByName("testuser1", "test");
+            int res = manager.getUserIdByName(username, password);
+            int res2 = manager.getUserIdByName(username + "_invalid", password);
 
             //then
-            Assert.AreEqual(1, res);
+            Assert.AreEqual(expectedUserId, res);
             Assert.IsFalse(res2 >= 0);
         }
 
